@@ -50,8 +50,10 @@ client.on('raw', event => {
     const { d: data } = event;
 
     if (event.t === 'MESSAGE_REACTION_ADD') {
-        messageReactionAdd.handle(data.guild_id, data.channel_id, data.message_id, data.emoji.id, data.user_id);
+        const emoji = data.emoji.id ? data.emoji.id : data.emoji.name;
+        messageReactionAdd.handle(data.guild_id, data.channel_id, data.message_id, emoji, data.user_id);
     } else if (event.t === 'MESSAGE_REACTION_REMOVE') {
-        messageReactionRemove.handle(data.guild_id, data.channel_id, data.message_id, data.emoji.id, data.user_id);
+        const emoji = data.emoji.id ? data.emoji.id : data.emoji.name;
+        messageReactionRemove.handle(data.guild_id, data.channel_id, data.message_id, emoji, data.user_id);
     }
 });
