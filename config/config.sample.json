@@ -1,0 +1,21 @@
+{
+  "bot": {
+    "token": "",
+    "prefix": "+",
+    "owner": ["144872893279371264"],
+    "messageCache": 10
+  },
+  "defaultCommands": {
+    "commandState": false,
+    "unknownCommand": false,
+    "eval": false
+  },
+  "database": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "password": "",
+    "database": "botranktir",
+    "charset": "utf8mb4"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "Botranktir",
+      "script": "src/app.js",
+      "env": {
+        "NODE_ENV": "production",
+        "LOCAL": false
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "LOCAL": true
+      }
+    }
+  ]
+}
