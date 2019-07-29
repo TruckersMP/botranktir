@@ -18,13 +18,13 @@ module.exports = class AboutCommand extends Command {
             examples: ['about'],
             throttling: {
                 usages: 1,
-                duration: 60
-            }
+                duration: 60,
+            },
         });
     }
 
     async run(message) {
-        let ownerText = ``;
+        let ownerText = '';
         let owners = config.bot.owner;
         // If only an ID is presented, make the owner as an array for an easier work
         // (since we expect the owner to be an array with owners)
@@ -32,7 +32,7 @@ module.exports = class AboutCommand extends Command {
             owners = [config.bot.owner];
         }
         for (let i = 0; i < owners.length; i++) {
-            let user = this.client.users.get(owners[i]);
+            const user = this.client.users.get(owners[i]);
             if (user) {
                 ownerText += `${user.username}#${user.discriminator}\n`;
             } else {

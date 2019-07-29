@@ -19,41 +19,41 @@ module.exports = class DeleteRoleCommand extends Command {
             guildOnly: true,
             throttling: {
                 usages: 1,
-                duration: 15
+                duration: 15,
             },
             args: [
                 {
                     key: 'channel',
                     prompt: 'Channel where the message for the reaction is placed in.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
                 {
                     key: 'messageID',
                     prompt: 'Message that the reaction should be removed from.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
                 {
                     key: 'emoji',
                     prompt: 'Emoticon that was used for the reaction role.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
-            ]
+            ],
         });
     }
 
     async run(message, { channel, messageID, emoji }) {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!emoji) {
-            return await message.reply(`please, provide all parameters! For more information, `
+            return await message.reply('please, provide all parameters! For more information, '
                 + `run command \`${this.client.commandPrefix}help delrole\``);
         }
 
         const guildChannel = message.mentions.channels.first();
         if (!guildChannel) {
-            return await message.reply(`I could not find the channel. Make sure I have access to it.`);
+            return await message.reply('I could not find the channel. Make sure I have access to it.');
         }
 
         // Get only the emote name and the ID in the required format (truckersmp:579609125831573504)
@@ -70,7 +70,7 @@ module.exports = class DeleteRoleCommand extends Command {
         const affectedRows = await Role.deleteReactionRole(guildChannel.id, messageID.toString(), emojiID, message.guild.id);
 
         if (affectedRows === 0) {
-            return await message.reply(`no reaction matches the given credentials.`);
+            return await message.reply('no reaction matches the given credentials.');
         }
 
         // Remove the reaction if it was removed from the database since
@@ -89,6 +89,6 @@ module.exports = class DeleteRoleCommand extends Command {
 
         roleManager.removeRole(message.guild.id, guildChannel.id, messageID.toString(), emojiID);
 
-        await message.reply(`the reaction role has been successfully removed.`);
+        await message.reply('the reaction role has been successfully removed.');
     }
 };
