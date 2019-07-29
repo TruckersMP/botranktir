@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Role = require('../../models/Role');
 
 module.exports = class DeleteRoleCommand extends Command {
     /**
@@ -11,7 +12,7 @@ module.exports = class DeleteRoleCommand extends Command {
             name: 'delrole',
             group: 'manage',
             memberName: 'delrole',
-            description: 'Delete the reaction role from the message.',
+            description: 'Remove the reaction role from the message.',
             examples: ['delrole #welcome 580458877531979786 :truckersmp:'],
             aliases: ['deleterole', 'deletereaction', 'delreaction'],
             userPermissions: ['MANAGE_GUILD'],
@@ -66,42 +67,28 @@ module.exports = class DeleteRoleCommand extends Command {
             emojiID = emojiResults[1];
         }
 
-        connection.query(
-            'DELETE FROM roles WHERE channel = ? AND message = ? AND emoji = ? AND guild = ?',
-            [guildChannel.id, messageID.toString(), emojiID, message.guild.id],
-            async (err, results) => {
-                if (err) {
-                    await message.reply(`The reaction role could not be removed from the database due to an error.`);
-                    if (this.client.isOwner(message.author)) {
-                        await message.channel.send(`Make sure the credentials for the database connection are `
-                            + `correct and restart the bot if you make any changes.`);
-                    }
+        const affectedRows = await Role.deleteReactionRole(guildChannel.id, messageID.toString(), emojiID, message.guild.id);
 
-                    return;
-                }
+        if (affectedRows === 0) {
+            return await message.reply(`no reaction matches the given credentials.`);
+        }
 
-                if (results.affectedRows === 0) {
-                    return await message.reply(`no reaction matches the given credentials.`);
-                }
-
-                // Remove the reaction if it was removed from the database since
-                // we want to remove only reactions for roles, not others
-                try {
-                    const messages = await guildChannel.messages.fetch();
-                    const channelMessage = await messages.get(messageID.toString());
-                    const messageReaction = channelMessage.reactions.get(emojiID);
-                    if (messageReaction) {
-                        messageReaction.users.remove(this.client.user.id);
-                    }
-                } catch (err) {
-                    // The message is probably too old and thus, the reaction cannot be removed
-                    // or the message cannot be found. We do not need to do anything
-                }
-
-                roleManager.removeRole(message.guild.id, guildChannel.id, messageID.toString(), emojiID);
-
-                await message.reply(`the reaction role has been successfully removed.`);
+        // Remove the reaction if it was removed from the database since
+        // we want to remove only reactions for roles, not others
+        try {
+            const messages = await guildChannel.messages.fetch();
+            const channelMessage = messages.get(messageID.toString());
+            const messageReaction = channelMessage.reactions.get(emojiID);
+            if (messageReaction) {
+                await messageReaction.users.remove(this.client.user.id);
             }
-        );
+        } catch (err) {
+            // The message is probably too old and thus, the reaction cannot be removed
+            // or the message cannot be found. We do not need to do anything
+        }
+
+        roleManager.removeRole(message.guild.id, guildChannel.id, messageID.toString(), emojiID);
+
+        await message.reply(`the reaction role has been successfully removed.`);
     }
 };

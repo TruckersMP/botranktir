@@ -61,8 +61,8 @@ the database and thus, the bot reacts much faster.
 2. Run the `npm install` command in the root folder.
 3. Copy the sample config file (`config/config.sample.json`) and create your own config file (`config/config.json`).
 4. Create a new database.
-5. Import the file that is available in the root folder of the bot (`botranktir.sql`).
-6. Set up the config properties.
+5. Set up the config properties.
+6. Run all migrations (`knex migrate:latest`).
 
 ### Running
 
