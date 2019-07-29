@@ -68,8 +68,8 @@ the database and thus, the bot reacts much faster.
 
 The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under two different environments:
 
-- **Production:** `pm2 start pm2.json`
-- **Development:** `pm2 start pm2.json --env=development`
+- **Production:** `npm run prod` (`pm2 start pm2.json`)
+- **Development:** `npm run dev` (`pm2-dev start pm2.json --env=development`)
 
 ## Configuration
 

@@ -4,7 +4,11 @@
   "description": "Discord bot that manages roles after reacting to a message",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "pm2 start pm2.json",
+    "reload": "pm2 reload pm2.json",
+    "dev": "pm2-dev start pm2.json --env=development",
+    "kill": "pm2 delete pm2.json"
   },
   "author": "TruckersMP",
   "license": "MIT",
