@@ -58,7 +58,8 @@ the database and thus, the bot reacts much faster.
 ## Installation
 
 1. Download the repository.
-2. Run the `npm install` command in the root folder.
+2. Run the `npm install` command in the root folder.  
+   *Due to the usage of Knex, we recommend installing it globally:* `npm install knex -g`
 3. Copy the sample config file (`config/config.sample.json`) and create your own config file (`config/config.json`).
 4. Create a new database.
 5. Set up the config properties.
