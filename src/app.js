@@ -1,19 +1,14 @@
 // Load libraries
 const { CommandoClient } = require('discord.js-commando');
 const path = require('path');
-const mysql = require('mysql');
 
 // Load config variables
 const config = require('../config/config.json');
 
-// Load MySQL connection to the global variable so all commands and other scripts can work with that
-global["connection"] = mysql.createConnection(config.database);
-connection.connect(err => {
-    if (err) {
-        console.error(err);
-        console.log('The connection to the database could not be established due to an error above.');
-        process.exit();
-    }
+// Set up the database connection
+global['knex'] = require('knex')({
+    client: 'mysql',
+    connection: config.database,
 });
 
 const client = new CommandoClient({

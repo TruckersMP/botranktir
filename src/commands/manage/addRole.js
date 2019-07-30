@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Role = require('../../models/Role');
 
 module.exports = class AddRoleCommand extends Command {
     /**
@@ -16,82 +17,84 @@ module.exports = class AddRoleCommand extends Command {
             examples: ['addrole #welcome 580458877531979786 :truckersmp: Subscriber'],
             aliases: ['addreaction'],
             userPermissions: ['MANAGE_GUILD'],
+            clientPermissions: ['MANAGE_ROLES'],
             guildOnly: true,
             throttling: {
                 usages: 1,
-                duration: 15
+                duration: 15,
             },
             args: [
                 {
                     key: 'channel',
                     prompt: 'Channel where the message for the reaction is placed in.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
                 {
                     key: 'messageID',
                     prompt: 'Message that the reaction should be put at.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
                 {
                     key: 'emojiRaw',
                     prompt: 'Emoticon that will assign or unassign the role (after reacting or removing the reaction).',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
                 {
                     key: 'role',
                     prompt: 'Role that will be assigned after reacting or unassigned after removing the reaction. '
                         + 'Can be ID of the role or the mention.',
                     type: 'string',
-                    default: ''
+                    default: '',
                 },
-            ]
+            ],
         });
     }
 
     async run(message, { channel, messageID, emojiRaw, role }) {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!role) {
-            return await message.reply(`please, provide all parameters! For more information, `
+            return await message.reply('please, provide all parameters! For more information, '
                 + `run command \`${this.client.commandPrefix}help addrole\``);
         }
 
-        const botMember = message.guild.members.get(this.client.user.id);
+        const guild = message.guild;
+        const botMember = guild.members.get(this.client.user.id);
         const botHighestRole = botMember.roles.highest;
 
         const guildChannel = message.mentions.channels.first();
         if (!guildChannel) {
-            return await message.reply(`I could not find the channel. Make sure I have access to it.`);
+            return await message.reply('I could not find the channel. Make sure I have access to it.');
         }
 
         const messages = await guildChannel.messages.fetch();
         const channelMessage = await messages.get(messageID.toString());
         if (!channelMessage) {
-            return await message.reply(`I could not find the message. Make sure I have access to read the `
-                + `channel and the message is in the channel you forwarded to me. Also, the message cannot be too old.`);
+            return await message.reply('I could not find the message. Make sure I have access to read the '
+                + 'channel and the message is in the channel you forwarded to me. Also, the message cannot be too old.');
         }
 
-        let guildRole = message.guild.roles.find(foundRole => foundRole.name === role);
+        let guildRole = guild.roles.find(foundRole => foundRole.name === role);
         // If the role cannot be found by the name, get the first mentioned role
         if (!guildRole) {
             guildRole = message.mentions.roles.first();
         }
         // Still no role? Try to get the role by the ID
         if (!guildRole) {
-            guildRole = message.guild.roles.get(role);
+            guildRole = guild.roles.get(role);
         }
         if (!guildRole) {
-            return await message.reply(`I could not find the role.`);
+            return await message.reply('I could not find the role.');
         }
         // The role is higher than bot's highest role
         if (guildRole.comparePositionTo(botHighestRole) > 0) {
-            return await message.reply(`the role is higher than my highest role. I would not be able to manage the role.`);
+            return await message.reply('the role is higher than my highest role. I would not be able to manage the role.');
         }
         // The role cannot be higher than author's highest role
         if (guildRole.comparePositionTo(message.member.roles.highest) > 0) {
-            return await message.reply(`I cannot give members a higher role than your current highest role!`);
+            return await message.reply('I cannot give members a higher role than your current highest role!');
         }
 
         // Get only the emote name and the ID in the required format (truckersmp:579609125831573504)
@@ -104,61 +107,30 @@ module.exports = class AddRoleCommand extends Command {
             emojiID = emojiResults[1];
         }
 
-        const moreDetailsText = `For more details, run this command: `
+        const moreDetailsText = 'For more details, run this command: '
             + `\`${this.client.commandPrefix}fetchmessage #${guildChannel.name} ${messageID}\``;
         // The same emoji cannot be twice on the same message
-        if (roleManager.getRole(message.guild.id, guildChannel.id, channelMessage.id, emojiID)) {
+        if (roleManager.getRole(guild.id, guildChannel.id, channelMessage.id, emojiID)) {
             return await message.reply(`this emoji has already been connected to a role on the message.\n${moreDetailsText}`);
         }
         // The same role cannot be linked to the message twice
-        if (roleManager.getEmojiFromRole(message.guild.id, guildChannel.id, channelMessage.id, guildRole.id)) {
+        if (roleManager.getEmojiFromRole(guild.id, guildChannel.id, channelMessage.id, guildRole.id)) {
             return await message.reply(`this role has already been connected to this message.\n${moreDetailsText}`);
         }
 
-        await channelMessage.react(emoji).catch(async err => {
-            await message.reply(`I could not react with the given emoji. Make sure I can use the emoji, or react `
-                + `with the emoji as first and use the command again.`);
+        await channelMessage.react(emoji).catch(async () => {
+            await message.reply('I could not react with the given emoji. Make sure I can use the emoji, or react '
+                + 'with the emoji as first and use the command again.');
         }).then(async () => {
             // Do not continue if the row already exists
-            connection.query(
-                'SELECT COUNT(*) AS existing FROM roles WHERE channel = ? AND message = ? AND emoji = ? AND role = ? AND guild = ?',
-                [guildChannel.id, channelMessage.id, emojiID, guildRole.id, message.guild.id],
-                async (err, results) => {
-                    if (err) {
-                        await message.reply(`I could not save the reaction role to the database due to an error.`);
-                        if (this.client.isOwner(message.author)) {
-                            await message.channel.send(`Make sure the credentials for the database connection are `
-                                + `correct and restart the bot if you make any changes.`);
-                        }
+            if (Role.doesExist(guildChannel.id, channelMessage.id, emojiID, guildRole.id, guild.id)) {
+                return await message.reply('a reaction role with the given details has already existed.');
+            }
 
-                        return;
-                    }
+            await Role.createReactionRole(guildChannel.id, channelMessage.id, emojiID, guildRole.id, guild.id, emojiRaw);
+            roleManager.addRole(guild.id, guildChannel.id, channelMessage.id, emojiID, guildRole.id, emojiRaw);
 
-                    if (results[0].existing) {
-                        return await message.reply(`a reaction role with the given details has already existed.`);
-                    }
-
-                    connection.query(
-                        'INSERT INTO roles (channel, message, emoji, role, guild, emoji_raw) VALUES (?, ?, ?, ?, ?, ?)',
-                        [guildChannel.id, channelMessage.id, emojiID, guildRole.id, message.guild.id, emojiRaw],
-                        async (err, results) => {
-                            if (err) {
-                                await message.reply(`I could not save the reaction role to the database due to an error.`);
-                                if (this.client.isOwner(message.author)) {
-                                    await message.channel.send(`Make sure the credentials for the database connection are `
-                                        + `correct and restart the bot if you make any changes.`);
-                                }
-
-                                return;
-                            }
-
-                            roleManager.addRole(message.guild.id, guildChannel.id, channelMessage.id, emojiID, guildRole.id, emojiRaw);
-
-                            await message.reply(`the reaction for the role has been successfully added.`);
-                        }
-                    );
-                }
-            );
+            await message.reply('the reaction for the role has been successfully added.');
         });
     }
 };

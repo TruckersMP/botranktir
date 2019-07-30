@@ -1,3 +1,5 @@
+const Role = require('../models/Role');
+
 module.exports = class Ready {
     /**
      * Ready class for handling the READY event.
@@ -22,21 +24,15 @@ module.exports = class Ready {
 
         // Load global libraries with managers
         const RoleManager = require('../lib/RoleManager.js');
-        global["roleManager"] = new RoleManager(this.client);
+        global['roleManager'] = new RoleManager(this.client);
 
         // Load all emojis to the client so on every reaction the bot does not have to connect to the database
         this.client.roles = {};
-        this.client.guilds.each(guild => {
+        this.client.guilds.each(async guild => {
             this.client.roles[guild.id] = {};
 
-            connection.query('SELECT channel, message, emoji, role, emoji_raw FROM roles WHERE guild = ?', [guild.id], (err, results) => {
-                if (err) {
-                    console.error(err);
-                    console.log(`The guild ${guild.id} has been skipped due to an error above.`);
-                } else {
-                    roleManager.fetchRoles(guild.id, results);
-                }
-            });
+            const roles = await Role.query().where('guild', guild.id);
+            roleManager.fetchRoles(guild.id, roles);
         });
     }
 };

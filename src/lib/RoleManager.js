@@ -21,7 +21,7 @@ module.exports = class ManageRoles {
      */
     fetchRoles(guild, results) {
         for (let i = 0; i < results.length; i++) {
-            let result = results[i];
+            const result = results[i];
 
             this.addRole(guild, result['channel'], result['message'], result['emoji'], result['role'], result['emoji_raw']);
         }
@@ -51,7 +51,7 @@ module.exports = class ManageRoles {
             this.client.roles[guild][channel][message] = {};
         }
 
-        this.client.roles[guild][channel][message][emoji] = {"role": role, "raw": emojiRaw};
+        this.client.roles[guild][channel][message][emoji] = { 'role': role, 'raw': emojiRaw };
     }
 
     /**
@@ -135,7 +135,7 @@ module.exports = class ManageRoles {
             return null;
         }
 
-        for (let key in roles) {
+        for (const key in roles) {
             if (!roles.hasOwnProperty(key)) {
                 continue;
             }
