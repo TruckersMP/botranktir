@@ -75,7 +75,7 @@ module.exports = class Role extends Model {
      * @param   {number|string} message
      * @param   {number|string} emoji
      * @param   {number|string} guild
-     * @returns {Promise<number>}                Number of affected rows.
+     * @returns {Promise<number>}       Number of affected rows.
      */
     static async deleteReactionRole(channel, message, emoji, guild) {
         return this.query()
