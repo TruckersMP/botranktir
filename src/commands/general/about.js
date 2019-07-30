@@ -16,6 +16,7 @@ module.exports = class AboutCommand extends Command {
             memberName: 'about',
             description: 'Get all information about the bot.',
             examples: ['about'],
+            clientPermissions: ['EMBED_LINKS'],
             throttling: {
                 usages: 1,
                 duration: 60,

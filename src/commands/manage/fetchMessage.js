@@ -15,6 +15,7 @@ module.exports = class FetchMessageCommand extends Command {
             description: 'Get all reaction roles that are registered for the message.',
             examples: ['fetchmessage #welcome 580458877531979786'],
             userPermissions: ['MANAGE_GUILD'],
+            clientPermissions: ['EMBED_LINKS'],
             guildOnly: true,
             throttling: {
                 usages: 1,
