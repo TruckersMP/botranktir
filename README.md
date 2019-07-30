@@ -58,11 +58,19 @@ the database and thus, the bot reacts much faster.
 ## Installation
 
 1. Download the repository.
-2. Run the `npm install` command in the root folder.
+2. Run the `npm install` command in the root folder.  
+   *Due to the usage of Knex, we recommend installing it globally:* `npm install knex -g`
 3. Copy the sample config file (`config/config.sample.json`) and create your own config file (`config/config.json`).
 4. Create a new database.
 5. Set up the config properties.
 6. Run all migrations (`knex migrate:latest`).
+7. Invite the bot to the guild with necessary permissions: `Manage Roles`, `Read Message History` and `Embed Links`.  
+   *The bot additionally needs permissions `Read Messages` and `Send Messages` in the channel which is used for its
+   configuration. On top of that, `Read Messages` and `Add Reactions` are permissions which are necessary in the
+   channel with reaction roles.*  
+   > Hint: If you are new to Discord, it is safe to give the bot the `Administrator` permission.
+8. Move bot's role over all roles that are supposed to be granted by reacting to a message.
+9. Start the bot by running the command `npm run prod`.
 
 ### Running
 

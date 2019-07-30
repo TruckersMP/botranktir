@@ -1,3 +1,13 @@
+## v1.1.1 (30/07/2019)
+
+### Added
+
+* Added new steps to the installation to include all necessary information
+
+### Fixed
+
+* Fixed the message about missing permissions by adding client permissions to commands
+
 ## v1.1.0 (30/07/2019)
 
 ### Added
