@@ -40,7 +40,7 @@ module.exports = class Role extends Model {
         return this.query()
             .where('channel', channel)
             .where('message', message)
-            .where('emoji', emoji)
+            .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emoji])
             .where('role', role)
             .where('guild', guild)
             .count('*') > 0;
@@ -81,7 +81,7 @@ module.exports = class Role extends Model {
         return this.query()
             .where('channel', channel)
             .where('message', message)
-            .where('emoji', emoji)
+            .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emoji])
             .where('guild', guild)
             .del();
     }

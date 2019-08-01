@@ -1,3 +1,9 @@
+## v1.1.2 (01/08/2019)
+
+### Fixed
+
+* Fixed a rare bug when all reaction roles using a flag as reaction got deleted at once
+
 ## v1.1.1 (30/07/2019)
 
 ### Added
