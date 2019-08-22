@@ -49,7 +49,7 @@ module.exports = class AboutCommand extends Command {
             .setFooter('Open source bot for reaction roles')
             .addField('Version', packageFile.version, true)
             .addField('Developed by', '[TruckersMP](https://truckersmp.com)', true)
-            .addField('Owner', ownerText);
+            .addField('Bot\'s Owner', ownerText);
 
         return await message.channel.send(embed);
     }

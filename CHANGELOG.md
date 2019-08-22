@@ -1,3 +1,14 @@
+## v1.1.3 (22/08/2019)
+
+### Added
+
+* Added a new command to display all bot's servers - `[p]servers`
+
+### Changed
+
+* Changed a confusing field text in the `[p]about` command output
+* Updated all dependencies (it may fix some rare bugs)
+
 ## v1.1.2 (01/08/2019)
 
 ### Fixed
