@@ -22,7 +22,7 @@ the database and thus, the bot reacts much faster.
 
 #### Examples
 
-- `{prefix}addrole #welcome 580458877531979786 :truckersmp: Subscriber`
+- `[p]addrole #welcome 580458877531979786 :truckersmp: Subscriber`
 
 > External emotes can be used, too. However, before using the command, react with the external emoji as first.
 
@@ -37,7 +37,7 @@ the database and thus, the bot reacts much faster.
 
 #### Examples
 
-- `{prefix}delrole #welcome 580458877531979786 :truckersmp:`
+- `[p]delrole #welcome 580458877531979786 :truckersmp:`
 
 ### Fetching Reaction Roles for a Message
 
@@ -48,7 +48,7 @@ the database and thus, the bot reacts much faster.
 
 #### Examples
 
-- `{prefix}fetchmessage #welcome 580458877531979786`
+- `[p]fetchmessage #welcome 580458877531979786`
 
 ## Requirements
 
