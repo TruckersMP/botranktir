@@ -8,7 +8,7 @@ const config = require('../config/config.json');
 // Set up the database connection
 global['knex'] = require('knex')({
     client: 'mysql',
-    connection: config.database
+    connection: config.database,
 });
 
 const client = new CommandoClient({
@@ -16,7 +16,7 @@ const client = new CommandoClient({
     owner: config.bot.owner,
     disableEveryone: true,
     commandEditableDuration: 0,
-    messageCacheMaxSize: config.bot.messageCache
+    messageCacheMaxSize: config.bot.messageCache,
 });
 client.registry
     .registerDefaultTypes()
