@@ -34,6 +34,7 @@ module.exports = class MessageReactionAdd {
         const member = guildInstance.members.get(user);
 
         if (!this.validate(guild, member)) {
+            // Remove the users failed reaction
             const channelInstance = guildInstance.channels.get(channel);
             const messageInstance = await new Discord.Message(this.client, { id: message }, channelInstance).fetch();
             await messageInstance.reactions
