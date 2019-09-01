@@ -49,3 +49,9 @@ client.on('raw', event => {
         messageReactionRemove.handle(data.guild_id, data.channel_id, data.message_id, emoji, data.user_id);
     }
 });
+
+// Graceful stop with pm2
+process.on('SIGINT', () => {
+    client.destroy();
+    process.exit(0);
+});
