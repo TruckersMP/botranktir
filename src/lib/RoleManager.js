@@ -11,6 +11,8 @@ module.exports = class ManageRoles {
         if (!this.client.hasOwnProperty('roles')) {
             this.client.roles = {};
         }
+
+        this.managedRoles = {};
     }
 
     /**
@@ -23,7 +25,14 @@ module.exports = class ManageRoles {
         for (let i = 0; i < results.length; i++) {
             const result = results[i];
 
-            this.addRole(guild, result['channel'], result['message'], result['emoji'], result['role'], result['emoji_raw']);
+            this.addRole(
+                guild,
+                result['channel'],
+                result['message'],
+                result['emoji'],
+                result['role'],
+                result['emoji_raw']
+            );
         }
     }
 
@@ -51,7 +60,8 @@ module.exports = class ManageRoles {
             this.client.roles[guild][channel][message] = {};
         }
 
-        this.client.roles[guild][channel][message][emoji] = { 'role': role, 'raw': emojiRaw };
+        this.client.roles[guild][channel][message][emoji] = { role: role, raw: emojiRaw };
+        this.managedRoles[role] = Object.create(null);
     }
 
     /**
@@ -64,11 +74,13 @@ module.exports = class ManageRoles {
      * @returns {boolean}               If the role was deleted from the client local storage.
      */
     removeRole(guild, channel, message, emoji) {
-        if (!this.getRole(guild, channel, message, emoji)) {
+        const role = this.getRole(guild, channel, message, emoji);
+        if (!role) {
             return false;
         }
 
         delete this.client.roles[guild][channel][message][emoji];
+        delete this.managedRoles[role];
         return true;
     }
 
@@ -92,9 +104,11 @@ module.exports = class ManageRoles {
      */
     getRoles(guild, channel, message) {
         // Check for existing keys. If they do not exist, there are no data for the message
-        if (!this.client.roles.hasOwnProperty(guild)
-            || !this.client.roles[guild].hasOwnProperty(channel)
-            || !this.client.roles[guild][channel].hasOwnProperty(message)) {
+        if (
+            !this.client.roles.hasOwnProperty(guild) ||
+            !this.client.roles[guild].hasOwnProperty(channel) ||
+            !this.client.roles[guild][channel].hasOwnProperty(message)
+        ) {
             return null;
         }
 
@@ -112,8 +126,10 @@ module.exports = class ManageRoles {
      */
     getRole(guild, channel, message, emoji) {
         // Check for existing keys. If they do not exist, there are no data for the message
-        if (!this.getRoles(guild, channel, message)
-            || !this.client.roles[guild][channel][message].hasOwnProperty(emoji)) {
+        if (
+            !this.getRoles(guild, channel, message) ||
+            !this.client.roles[guild][channel][message].hasOwnProperty(emoji)
+        ) {
             return null;
         }
 
@@ -146,5 +162,15 @@ module.exports = class ManageRoles {
         }
 
         return null;
+    }
+
+    /**
+     * Verify if the given role is managed by the bot.
+     *
+     * @param {number|string} role
+     */
+    isManagedRole(role) {
+        console.log(role, this.managedRoles);
+        return role in this.managedRoles;
     }
 };

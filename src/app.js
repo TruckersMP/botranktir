@@ -8,7 +8,7 @@ const config = require('../config/config.json');
 // Set up the database connection
 global['knex'] = require('knex')({
     client: 'mysql',
-    connection: config.database,
+    connection: config.database
 });
 
 const client = new CommandoClient({
@@ -16,16 +16,13 @@ const client = new CommandoClient({
     owner: config.bot.owner,
     disableEveryone: true,
     commandEditableDuration: 0,
-    messageCacheMaxSize: config.bot.messageCache,
+    messageCacheMaxSize: config.bot.messageCache
 });
 client.registry
     .registerDefaultTypes()
     .registerDefaultGroups()
     .registerDefaultCommands(config.defaultCommands)
-    .registerGroups([
-        ['general', 'General'],
-        ['manage', 'Managing'],
-    ])
+    .registerGroups([['general', 'General'], ['manage', 'Managing']])
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
@@ -37,7 +34,7 @@ client.once('ready', async () => {
     await ready.handle();
 });
 
-const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client);
+const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client, config.limits);
 const messageReactionRemove = new (require('./events/messageReactionRemove.js'))(client);
 
 // We have to use the raw event in case the message is not cached
