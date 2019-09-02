@@ -170,7 +170,6 @@ module.exports = class ManageRoles {
      * @param {number|string} role
      */
     isManagedRole(role) {
-        console.log(role, this.managedRoles);
         return role in this.managedRoles;
     }
 };
