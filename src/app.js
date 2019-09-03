@@ -22,7 +22,10 @@ client.registry
     .registerDefaultTypes()
     .registerDefaultGroups()
     .registerDefaultCommands(config.defaultCommands)
-    .registerGroups([['general', 'General'], ['manage', 'Managing']])
+    .registerGroups([
+        ['general', 'General'],
+        ['manage', 'Managing'],
+    ])
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function

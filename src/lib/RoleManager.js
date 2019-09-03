@@ -61,7 +61,7 @@ module.exports = class ManageRoles {
         }
 
         this.client.roles[guild][channel][message][emoji] = { role: role, raw: emojiRaw };
-        this.managedRoles[role] = Object.create(null);
+        this.managedRoles[role] = { guild: guild, channel: channel, message: message };
     }
 
     /**
@@ -167,7 +167,8 @@ module.exports = class ManageRoles {
     /**
      * Verify if the given role is managed by the bot.
      *
-     * @param {number|string} role
+     * @param   {number|string} role
+     * @returns {boolean}
      */
     isManagedRole(role) {
         return role in this.managedRoles;

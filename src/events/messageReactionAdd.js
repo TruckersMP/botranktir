@@ -33,6 +33,10 @@ module.exports = class MessageReactionAdd {
         const guildInstance = this.client.guilds.get(guild);
         const member = guildInstance.members.get(user);
 
+        if (member.user.bot) {
+            return;
+        }
+
         if (!this.validate(guild, member)) {
             // Remove the users failed reaction
             const channelInstance = guildInstance.channels.get(channel);
@@ -58,7 +62,7 @@ module.exports = class MessageReactionAdd {
             member.roles
                 .array()
                 .map(role => role.id)
-                .filter(roleManager.isManagedRole.bind(roleManager)).length < this.limits[guild].rolesPerUser
+                .filter(roleManager.isManagedRole.bind(roleManager)).length <= this.limits[guild].rolesPerUser
         );
     }
 };
