@@ -54,8 +54,9 @@ module.exports = class MessageReactionAdd {
     /**
      * Ensure the user has not reached limits
      *
-     * @param {number|string} guild
-     * @param {GuildMember} member
+     * @param   {number|string} guild
+     * @param   {GuildMember} member
+     * @returns {boolean}
      */
     validate(guild, member) {
         return (
