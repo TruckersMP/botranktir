@@ -37,7 +37,7 @@ client.once('ready', async () => {
     await ready.handle();
 });
 
-const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client);
+const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client, config.limits);
 const messageReactionRemove = new (require('./events/messageReactionRemove.js'))(client);
 
 // We have to use the raw event in case the message is not cached
@@ -51,4 +51,10 @@ client.on('raw', event => {
         const emoji = data.emoji.id ? data.emoji.id : data.emoji.name;
         messageReactionRemove.handle(data.guild_id, data.channel_id, data.message_id, emoji, data.user_id);
     }
+});
+
+// Graceful stop with pm2
+process.on('SIGINT', () => {
+    client.destroy();
+    process.exit(0);
 });

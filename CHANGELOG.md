@@ -1,3 +1,14 @@
+## v1.1.4 (03/09/2019)
+
+### Added
+
+* Added configurable role limits to the configuration file - `limits`
+
+### Fixed
+
+* Fixed a bug when the bot sometimes received the reaction role
+* Fixed stopping PM2
+
 ## v1.1.3 (22/08/2019)
 
 ### Added

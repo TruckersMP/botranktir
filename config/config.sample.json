@@ -18,5 +18,10 @@
     "password": "",
     "database": "botranktir",
     "charset": "utf8mb4"
+  },
+  "limits": {
+    "307433337126125568": {
+      "rolesPerUser": 10
+    }
   }
 }

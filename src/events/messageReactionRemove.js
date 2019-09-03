@@ -29,6 +29,10 @@ module.exports = class MessageReactionAdd {
         const guildInstance = this.client.guilds.get(guild);
         const member = guildInstance.members.get(user);
 
+        if (member.user.bot) {
+            return;
+        }
+
         return await member.roles.remove(role).catch(console.error);
     }
 };
