@@ -22,10 +22,7 @@ client.registry
     .registerDefaultTypes()
     .registerDefaultGroups()
     .registerDefaultCommands(config.defaultCommands)
-    .registerGroups([
-        ['general', 'General'],
-        ['manage', 'Managing'],
-    ])
+    .registerGroups([['general', 'General'], ['manage', 'Managing']])
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
@@ -37,7 +34,7 @@ client.once('ready', async () => {
     await ready.handle();
 });
 
-const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client);
+const messageReactionAdd = new (require('./events/messageReactionAdd.js'))(client, config.limits);
 const messageReactionRemove = new (require('./events/messageReactionRemove.js'))(client);
 
 // We have to use the raw event in case the message is not cached
@@ -51,4 +48,10 @@ client.on('raw', event => {
         const emoji = data.emoji.id ? data.emoji.id : data.emoji.name;
         messageReactionRemove.handle(data.guild_id, data.channel_id, data.message_id, emoji, data.user_id);
     }
+});
+
+// Graceful stop with pm2
+process.on('SIGINT', () => {
+    client.destroy();
+    process.exit(0);
 });
