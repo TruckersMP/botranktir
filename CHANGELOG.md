@@ -1,3 +1,9 @@
+## v1.1.5 (08/09/2019)
+
+### Fixed
+
+* Fixed the configurable role limit when the guild is not defined in the config
+
 ## v1.1.4 (03/09/2019)
 
 ### Added
