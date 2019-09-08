@@ -59,6 +59,10 @@ module.exports = class MessageReactionAdd {
      * @returns {boolean}
      */
     validate(guild, member) {
+        if (!this.limits.hasOwnProperty(guild) || !this.limits[guild].hasOwnProperty('rolesPerUser')) {
+            return true;
+        }
+
         return (
             member.roles
                 .array()
