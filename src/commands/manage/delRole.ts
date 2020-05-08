@@ -1,5 +1,7 @@
-const { Command } = require('discord.js-commando');
-const Role = require('../../models/Role');
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { Command } from 'discord.js-commando';
+import Role from '../../models/Role';
+import { Message } from 'discord.js';
 
 module.exports = class DeleteRoleCommand extends Command {
     /**
@@ -7,7 +9,7 @@ module.exports = class DeleteRoleCommand extends Command {
      *
      * @param   {CommandoClient} client
      */
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'delrole',
             group: 'manage',
@@ -44,20 +46,25 @@ module.exports = class DeleteRoleCommand extends Command {
         });
     }
 
-    async run(message, { channel, messageID, emoji }) {
+    async run(
+        message: CommandoMessage,
+        { channel, messageID, emojiRaw }: { channel: {}; messageID: string; emojiRaw: string }
+    ): Promise<Message | Message[]> {
         // If the last parameter is not provided, other parameters cannot be provided either
-        if (!emoji) {
-            return await message.reply('please, provide all parameters! For more information, '
-                + `run command \`${this.client.commandPrefix}help delrole\``);
+        if (!emojiRaw) {
+            return message.reply(
+                'please, provide all parameters! For more information, ' +
+                    `run command \`${this.client.commandPrefix}help delrole\``
+            );
         }
 
         const guildChannel = message.mentions.channels.first();
         if (!guildChannel) {
-            return await message.reply('I could not find the channel. Make sure I have access to it.');
+            return message.reply('I could not find the channel. Make sure I have access to it.');
         }
 
         // Get only the emote name and the ID in the required format (truckersmp:579609125831573504)
-        emoji = emoji.replace(/<?a?:?((.*:)?([0-9]+|.*))>?/, '$1');
+        const emoji = emojiRaw.replace(/<?a?:?((.*:)?([0-9]+|.*))>?/, '$1');
 
         let emojiID = emoji;
         // The emoji should be an ID. However, the emoji can also be a unicode symbol and
@@ -67,10 +74,15 @@ module.exports = class DeleteRoleCommand extends Command {
             emojiID = emojiResults[1];
         }
 
-        const affectedRows = await Role.deleteReactionRole(guildChannel.id, messageID.toString(), emojiID, message.guild.id);
+        const affectedRows = await Role.deleteReactionRole(
+            guildChannel.id,
+            messageID.toString(),
+            emojiID,
+            message.guild.id
+        );
 
         if (affectedRows === 0) {
-            return await message.reply('no reaction matches the given credentials.');
+            return message.reply('no reaction matches the given credentials.');
         }
 
         // Remove the reaction if it was removed from the database since
@@ -78,7 +90,7 @@ module.exports = class DeleteRoleCommand extends Command {
         try {
             const messages = await guildChannel.messages.fetch();
             const channelMessage = messages.get(messageID.toString());
-            const messageReaction = channelMessage.reactions.get(emojiID);
+            const messageReaction = channelMessage.reactions.resolve(emojiID);
             if (messageReaction) {
                 await messageReaction.users.remove(this.client.user.id);
             }
@@ -87,8 +99,8 @@ module.exports = class DeleteRoleCommand extends Command {
             // or the message cannot be found. We do not need to do anything
         }
 
-        roleManager.removeRole(message.guild.id, guildChannel.id, messageID.toString(), emojiID);
+        global.roleManager.removeRole(message.guild.id, guildChannel.id, messageID.toString(), emojiID);
 
-        await message.reply('the reaction role has been successfully removed.');
+        return message.reply('the reaction role has been successfully removed.');
     }
 };

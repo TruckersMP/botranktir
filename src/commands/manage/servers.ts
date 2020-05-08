@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js');
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { MessageEmbed, Message } from 'discord.js';
 
 module.exports = class ServersCommand extends Command {
-    constructor(client) {
+    constructor(client: CommandoClient) {
         super(client, {
             name: 'servers',
             group: 'manage',
@@ -14,7 +14,7 @@ module.exports = class ServersCommand extends Command {
         });
     }
 
-    hasPermission(message) {
+    hasPermission(message: CommandoMessage) {
         if (this.client.isOwner(message.author)) {
             return true;
         }
@@ -27,11 +27,11 @@ module.exports = class ServersCommand extends Command {
         return message.member.hasPermission('MANAGE_GUILD', { checkAdmin: true, checkOwner: true });
     }
 
-    async run(message) {
+    async run(message: CommandoMessage, {}: {}): Promise<Message | Message[]> {
         const servers = [];
         // Determine whether the foreach has been finished prematurely (for example when the description is too long)
         let finished = false;
-        this.client.guilds.forEach(guild => {
+        this.client.guilds.cache.forEach((guild) => {
             if (finished) {
                 return;
             }
@@ -49,9 +49,9 @@ module.exports = class ServersCommand extends Command {
         const embed = new MessageEmbed()
             .setDescription(servers)
             .setAuthor(`${clientUser.username}#${clientUser.discriminator}`, clientUser.displayAvatarURL())
-            .setColor(0xC4FCFF)
+            .setColor(0xc4fcff)
             .setTitle('**Servers**');
 
-        await message.embed(embed);
+        return message.embed(embed);
     }
 };
