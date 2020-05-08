@@ -92,7 +92,7 @@ module.exports = class DeleteRoleCommand extends Command {
             const channelMessage = messages.get(messageID.toString());
             const messageReaction = channelMessage.reactions.resolve(emojiID);
             if (messageReaction) {
-                await messageReaction.users.remove(this.client.user.id);
+                await messageReaction.remove();
             }
         } catch (err) {
             // The message is probably too old and thus, the reaction cannot be removed
