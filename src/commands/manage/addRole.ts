@@ -2,7 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import * as Discord from 'discord.js';
 import Role from '../../models/Role';
 
-export class AddRoleCommand extends Command {
+module.exports = class AddRoleCommand extends Command {
     /**
      * AddRoleCommand class for the +addrole command that adds a row to the database for the reaction role.
      *
@@ -62,7 +62,7 @@ export class AddRoleCommand extends Command {
     ): Promise<Discord.Message | Discord.Message[]> {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!role) {
-            return await message.reply(
+            return message.reply(
                 'please, provide all parameters! For more information, ' +
                     `run command \`${this.client.commandPrefix}help addrole\``
             );
@@ -122,13 +122,11 @@ export class AddRoleCommand extends Command {
             `\`${this.client.commandPrefix}fetchmessage #${guildChannel.name} ${messageID}\``;
         // The same emoji cannot be twice on the same message
         if (global.roleManager.getRole(guild.id, guildChannel.id, channelMessage.id, emojiID)) {
-            return await message.reply(
-                `this emoji has already been connected to a role on the message.\n${moreDetailsText}`
-            );
+            return message.reply(`this emoji has already been connected to a role on the message.\n${moreDetailsText}`);
         }
         // The same role cannot be linked to the message twice
         if (global.roleManager.getEmojiFromRole(guild.id, guildChannel.id, channelMessage.id, guildRole.id)) {
-            return await message.reply(`this role has already been connected to this message.\n${moreDetailsText}`);
+            return message.reply(`this role has already been connected to this message.\n${moreDetailsText}`);
         }
 
         return channelMessage
@@ -160,4 +158,4 @@ export class AddRoleCommand extends Command {
                 }
             );
     }
-}
+};
