@@ -37,7 +37,7 @@ module.exports = class DeleteRoleCommand extends Command {
                     default: '',
                 },
                 {
-                    key: 'emoji',
+                    key: 'emojiRaw',
                     prompt: 'Emoticon that was used for the reaction role.',
                     type: 'string',
                     default: '',
