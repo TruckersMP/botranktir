@@ -79,8 +79,6 @@ The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under 
 -   **Production:** `npm run prod` (`tsc && pm2 start pm2.json`)
 -   **Development:** `npm run dev` (`pm2-dev start pm2.json --env=development`)
 
-For live updates during development, use `npm run build -- -w` alongside the above.
-
 ## Configuration
 
 -   `bot.token` - can be obtained on the [Discord Developer Portal](https://discordapp.com/developers/applications/)
