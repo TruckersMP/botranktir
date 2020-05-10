@@ -35,7 +35,10 @@ client.registry
         ['general', 'General'],
         ['manage', 'Managing'],
     ])
-    .registerCommandsIn(path.join(__dirname, 'commands'));
+    .registerCommandsIn({
+        dirname: path.join(__dirname, 'commands'),
+        filter: /^[^.].*\.ts$/, // https://github.com/discordjs/Commando/issues/297
+    });
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
 client.login(config.bot.token).catch(console.error);
