@@ -1,10 +1,18 @@
-## v1.1.5 (08/09/2019)
+# Release Notes
+
+## [v1.1.6 (29/03/2020)](https://github.com/TruckersMP/botranktir/compare/1.1.5...1.1.6)
+
+### Changed
+
+* Updated dependencies, audit fix applied.
+
+## [v1.1.5 (08/09/2019)](https://github.com/TruckersMP/botranktir/compare/1.1.4...1.1.5)
 
 ### Fixed
 
 * Fixed the configurable role limit when the guild is not defined in the config
 
-## v1.1.4 (03/09/2019)
+## [v1.1.4 (03/09/2019)](https://github.com/TruckersMP/botranktir/compare/1.1.3...1.1.4)
 
 ### Added
 
@@ -15,7 +23,7 @@
 * Fixed a bug when the bot sometimes received the reaction role
 * Fixed stopping PM2
 
-## v1.1.3 (22/08/2019)
+## [v1.1.3 (22/08/2019)](https://github.com/TruckersMP/botranktir/compare/1.1.2...1.1.3)
 
 ### Added
 
@@ -26,13 +34,13 @@
 * Changed a confusing field text in the `[p]about` command output
 * Updated all dependencies (it may fix some rare bugs)
 
-## v1.1.2 (01/08/2019)
+## [v1.1.2 (01/08/2019)](https://github.com/TruckersMP/botranktir/compare/1.1.1...1.1.2)
 
 ### Fixed
 
 * Fixed a rare bug when all reaction roles using a flag as reaction got deleted at once
 
-## v1.1.1 (30/07/2019)
+## [v1.1.1 (30/07/2019)](https://github.com/TruckersMP/botranktir/compare/1.1.0...1.1.1)
 
 ### Added
 
@@ -42,7 +50,7 @@
 
 * Fixed the message about missing permissions by adding client permissions to commands
 
-## v1.1.0 (30/07/2019)
+## [v1.1.0 (30/07/2019)](https://github.com/TruckersMP/botranktir/compare/1.0.0...1.1.0)
 
 ### Added
 
