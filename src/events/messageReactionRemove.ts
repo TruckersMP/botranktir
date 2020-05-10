@@ -1,6 +1,11 @@
 import * as Discord from 'discord.js';
 import { fetchReactionData } from '../lib/PartialFetch';
 
+/**
+ * handles messageReactionRemove events from Discord
+ * @param reaction the reaction that was removed from
+ * @param user the user who removed from the reaction
+ */
 export const MessageReactionRemove = async (reaction: Discord.MessageReaction, user: Discord.User) => {
     const r = await fetchReactionData(reaction, user).catch((e) => console.error('fetching reaction data', e));
     if (!r) {

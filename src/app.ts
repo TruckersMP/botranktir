@@ -51,7 +51,7 @@ client.once('ready', async () => {
 });
 
 // Register reaction handlers
-client.on('messageReactionAdd', MessageReactionAddHandler(config.limits));
+client.on('messageReactionAdd', new MessageReactionAddHandler(config.limits).handler);
 client.on('messageReactionRemove', MessageReactionRemove);
 
 // Graceful stop with pm2
