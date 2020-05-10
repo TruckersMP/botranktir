@@ -1,3 +1,5 @@
+# Release Notes
+
 ## [v1.1.6 (29/03/2020)](https://github.com/TruckersMP/botranktir/compare/1.1.5...1.1.6)
 
 ### Changed
