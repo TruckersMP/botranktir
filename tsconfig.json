@@ -1,0 +1,15 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "outDir": "./build",
+        "target": "ES6",
+        "module": "commonjs",
+        "resolveJsonModule": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "typeRoots": ["./src/types"],
+        "sourceMap": true
+    },
+    "include": ["./src/**/*"]
+}
