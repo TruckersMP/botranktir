@@ -5,10 +5,6 @@
             "script": "ts-node",
             "args": "--files --project tsconfig.json src/app.ts",
             "env": {
-                "NODE_ENV": "production",
-                "LOCAL": false
-            },
-            "env_development": {
                 "NODE_ENV": "development",
                 "LOCAL": true
             }

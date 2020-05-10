@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "prod": "tsc && pm2 start pm2/pm2.json",
         "reload": "tsc && pm2 reload pm2/pm2.json",
-        "dev": "pm2-dev start pm2/pm2-dev.json --env=development",
+        "dev": "pm2-dev start pm2/pm2-dev.json",
         "kill": "pm2 delete pm2/pm2.json",
         "build": "tsc"
     },
