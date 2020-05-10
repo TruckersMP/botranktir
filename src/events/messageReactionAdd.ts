@@ -4,6 +4,7 @@ import { fetchReactionData } from '../lib/PartialFetch';
 /**
  * MessageReactionAddHandler returns an event handler for reaction additions
  * @param limits limits configuration
+ * @returns an event handler for Discord's messageReactionAdd event
  */
 export const MessageReactionAddHandler = (limits: Botranktir.LimitsMap) => async (
     reaction: Discord.MessageReaction,
