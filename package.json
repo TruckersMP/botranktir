@@ -5,10 +5,10 @@
     "main": "build/src/app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "prod": "tsc && pm2 start pm2.json",
-        "reload": "tsc && pm2 reload pm2.json",
-        "dev": "tsc && pm2-dev start pm2.json --env=development",
-        "kill": "pm2 delete pm2.json",
+        "prod": "tsc && pm2 start pm2/pm2.json",
+        "reload": "tsc && pm2 reload pm2/pm2.json",
+        "dev": "pm2-dev start pm2/pm2-dev.json --env=development",
+        "kill": "pm2 delete pm2/pm2.json",
         "build": "tsc"
     },
     "author": "TruckersMP",
@@ -27,6 +27,7 @@
     "devDependencies": {
         "@types/node": "^13.13.5",
         "eslint": "^6.8.0",
+        "ts-node": "^8.10.1",
         "typescript": "^3.8.3"
     }
 }
