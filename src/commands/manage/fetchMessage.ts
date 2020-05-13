@@ -41,13 +41,13 @@ module.exports = class FetchMessageCommand extends Command {
 
     async run(
         message: CommandoMessage,
-        { channel, messageID }: { channel: string; messageID: string }
+        { channel, messageID }: { channel: string; messageID: string },
     ): Promise<Message | Message[]> {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!messageID) {
             return message.reply(
                 'please, provide all parameters! For more information, ' +
-                    `run command \`${this.client.commandPrefix}help fetchmessage\``
+                    `run command \`${this.client.commandPrefix}help fetchmessage\``,
             );
         }
 
@@ -59,7 +59,7 @@ module.exports = class FetchMessageCommand extends Command {
         const roles = global.roleManager.getRoles(message.guild.id, guildChannel.id, messageID.toString());
         if (!roles) {
             return message.reply(
-                'there are no reaction roles registered for the message or ' + 'the message does not exist.'
+                'there are no reaction roles registered for the message or ' + 'the message does not exist.',
             );
         }
 

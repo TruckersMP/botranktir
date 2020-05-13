@@ -48,13 +48,13 @@ module.exports = class DeleteRoleCommand extends Command {
 
     async run(
         message: CommandoMessage,
-        { channel, messageID, emojiRaw }: { channel: {}; messageID: string; emojiRaw: string }
+        { channel, messageID, emojiRaw }: { channel: {}; messageID: string; emojiRaw: string },
     ): Promise<Message | Message[]> {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!emojiRaw) {
             return message.reply(
                 'please, provide all parameters! For more information, ' +
-                    `run command \`${this.client.commandPrefix}help delrole\``
+                    `run command \`${this.client.commandPrefix}help delrole\``,
             );
         }
 
@@ -78,7 +78,7 @@ module.exports = class DeleteRoleCommand extends Command {
             guildChannel.id,
             messageID.toString(),
             emojiID,
-            message.guild.id
+            message.guild.id,
         );
 
         if (affectedRows === 0) {

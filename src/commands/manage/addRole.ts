@@ -58,13 +58,13 @@ module.exports = class AddRoleCommand extends Command {
 
     async run(
         message: CommandoMessage,
-        { channel, messageID, emojiRaw, role }: { channel: {}; messageID: string; emojiRaw: string; role: string }
+        { channel, messageID, emojiRaw, role }: { channel: {}; messageID: string; emojiRaw: string; role: string },
     ): Promise<Discord.Message | Discord.Message[]> {
         // If the last parameter is not provided, other parameters cannot be provided either
         if (!role) {
             return message.reply(
                 'please, provide all parameters! For more information, ' +
-                    `run command \`${this.client.commandPrefix}help addrole\``
+                    `run command \`${this.client.commandPrefix}help addrole\``,
             );
         }
 
@@ -82,7 +82,7 @@ module.exports = class AddRoleCommand extends Command {
         if (!channelMessage) {
             return message.reply(
                 'I could not find the message. Make sure I have access to read the ' +
-                    'channel and the message is in the channel you forwarded to me. Also, the message cannot be too old.'
+                    'channel and the message is in the channel you forwarded to me. Also, the message cannot be too old.',
             );
         }
 
@@ -134,7 +134,7 @@ module.exports = class AddRoleCommand extends Command {
             .catch(async () => {
                 await message.reply(
                     'I could not react with the given emoji. Make sure I can use the emoji, or react ' +
-                        'with the emoji as first and use the command again.'
+                        'with the emoji as first and use the command again.',
                 );
             })
             .then(
@@ -150,12 +150,12 @@ module.exports = class AddRoleCommand extends Command {
                         emojiID,
                         guildRole.id,
                         guild.id,
-                        emojiRaw
+                        emojiRaw,
                     );
                     global.roleManager.addRole(guild.id, guildChannel.id, channelMessage.id, guildRole.id, emojiRaw);
 
                     return message.reply('the reaction for the role has been successfully added.');
-                }
+                },
             );
     }
 };

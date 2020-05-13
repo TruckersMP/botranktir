@@ -16,7 +16,7 @@ export const MessageReactionRemove = async (reaction: Discord.MessageReaction, u
         r.message.guild.id,
         r.message.channel.id,
         r.message.id,
-        r.reaction.emoji.name
+        r.reaction.emoji.name,
     );
     if (!role) {
         return;

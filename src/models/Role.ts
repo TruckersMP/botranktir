@@ -58,7 +58,7 @@ export default class Role extends Model implements IRole {
         messageID: string,
         emojiID: string,
         roleID: string,
-        guildID: string
+        guildID: string,
     ): Promise<boolean> {
         const c: number = (
             await this.query()
@@ -91,7 +91,7 @@ export default class Role extends Model implements IRole {
         emojiID: string,
         roleID: string,
         guildID: string,
-        emojiRaw: string
+        emojiRaw: string,
     ): Promise<void> {
         await this.query().insert({
             channel: channelID,
@@ -116,7 +116,7 @@ export default class Role extends Model implements IRole {
         channelID: number | string,
         messageID: number | string,
         emojiID: number | string,
-        guildID: number | string
+        guildID: number | string,
     ): Promise<number> {
         return this.query()
             .where('channel', channelID)

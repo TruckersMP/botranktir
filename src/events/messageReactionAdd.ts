@@ -30,7 +30,7 @@ export class MessageReactionAddHandler {
             r.message.guild.id,
             r.message.channel.id,
             r.message.id,
-            r.reaction.emoji.name
+            r.reaction.emoji.name,
         );
         if (!role) {
             return;
@@ -39,7 +39,7 @@ export class MessageReactionAddHandler {
         if (!this.isAllowedToRequestRole(r.message.guild.id, r.member)) {
             r.reaction.users.remove(user);
         } else {
-            r.member.roles.add(role).catch((r) => console.error('adding reaction role', r));
+            r.member.roles.add(role).catch((reactionRole) => console.error('adding reaction role', reactionRole));
         }
     };
 

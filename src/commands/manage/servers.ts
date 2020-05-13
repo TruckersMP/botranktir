@@ -27,7 +27,7 @@ module.exports = class ServersCommand extends Command {
         return message.member.hasPermission('MANAGE_GUILD', { checkAdmin: true, checkOwner: true });
     }
 
-    async run(message: CommandoMessage, {}: {}): Promise<Message | Message[]> {
+    async run(message: CommandoMessage): Promise<Message | Message[]> {
         const servers = [];
         // Determine whether the foreach has been finished prematurely (for example when the description is too long)
         let finished = false;

@@ -26,7 +26,7 @@ export class AboutCommand extends Command {
 
     async run(message: CommandoMessage) {
         let ownerText = '';
-        let owners = config.bot.owner;
+        const owners = config.bot.owner;
         for (let i = 0; i < owners.length; i++) {
             const user = this.client.users.resolve(owners[i]);
             if (user) {
@@ -44,7 +44,7 @@ export class AboutCommand extends Command {
             .setFooter('Open source bot for reaction roles')
             .addField('Version', packageFile.version, true)
             .addField('Developed by', '[TruckersMP](https://truckersmp.com)', true)
-            .addField("Bot's Owner", ownerText);
+            .addField('Bot\'s Owner', ownerText);
 
         return await message.channel.send(embed);
     }
