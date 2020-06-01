@@ -1,9 +1,25 @@
-const config = require('./config/config');
+// Load config variables
+const dotenv = require('dotenv');
+const config = dotenv.config({ path: '.env' });
+if (config.error) {
+    console.error('configuration could not be parsed', config.error);
+    process.exit(1);
+}
+
+const connection = {
+    driver: process.env.DB_DRIVER,
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    charset: process.env.DB_CHARSET,
+};
 
 module.exports = {
     development: {
         client: 'mysql',
-        connection: config.database,
+        connection,
         migrations: {
             tableName: 'knex_migrations',
         },
@@ -11,7 +27,7 @@ module.exports = {
 
     production: {
         client: 'mysql',
-        connection: config.database,
+        connection,
         migrations: {
             tableName: 'knex_migrations',
         },

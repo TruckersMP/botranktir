@@ -1,14 +1,8 @@
-import { Command, CommandoMessage, CommandoClient } from 'discord.js-commando';
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { MessageEmbed } from 'discord.js';
 import * as packageFile from '../../../package.json';
-import * as config from '../../../config/config.json';
 
-export class AboutCommand extends Command {
-    /**
-     * AboutCommand class for the +about command that prints all information about the bot.
-     *
-     * @param   {CommandoClient} client
-     */
+module.exports = class AboutCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'about',
@@ -26,21 +20,15 @@ export class AboutCommand extends Command {
 
     async run(message: CommandoMessage) {
         let ownerText = '';
-        const owners = config.bot.owner;
-        for (let i = 0; i < owners.length; i++) {
-            const user = this.client.users.resolve(owners[i]);
-            if (user) {
-                ownerText += `${user.username}#${user.discriminator}\n`;
-            } else {
-                ownerText += `<@${owners[i]}>\n`;
-            }
+        for (const owner of this.client.owners) {
+            ownerText += `${owner.username}#${owner.discriminator}\n`;
         }
 
         const embed = new MessageEmbed()
             .setAuthor('TruckersMP', 'https://truckersmp.com/assets/img/avatar.png')
             .setTitle('Botranktir')
             .setURL('https://github.com/TruckersMP/botranktir')
-            .setColor(0xc4fcff)
+            .setColor(global.BOT_COLOR)
             .setFooter('Open source bot for reaction roles')
             .addField('Version', packageFile.version, true)
             .addField('Developed by', '[TruckersMP](https://truckersmp.com)', true)
@@ -48,4 +36,4 @@ export class AboutCommand extends Command {
 
         return await message.channel.send(embed);
     }
-}
+};

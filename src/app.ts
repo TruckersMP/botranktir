@@ -1,36 +1,65 @@
 // Load config variables
-import * as rawConfig from '../config/config.json';
-const config = rawConfig as Botranktir.Config;
-
+import * as dotenv from 'dotenv';
 // Load libraries
-import { CommandoClient } from 'discord.js-commando';
+import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import * as path from 'path';
 import * as Knex from 'knex';
-import { MessageReactionAddHandler } from './events/messageReactionAdd';
-import { MessageReactionRemove } from './events/messageReactionRemove';
-import Ready from './events/ready';
+import { GuildDeleteEvent } from './events/guild/guild.delete.event';
+import { MessageReactionAddEvent } from './events/message/message.reaction-add.event';
+import { MessageReactionRemoveEvent } from './events/message/message.reaction-remove.event';
+import { ReadyEvent } from './events/ready.event';
 import { Model } from 'objection';
+import { Intents, MessageReaction, User } from 'discord.js';
+
+const config = dotenv.config({ path: '.env' });
+if (config.error) {
+    console.error('configuration could not be parsed\n', config.error);
+    process.exit(1);
+}
+
+// Set global variables
+global['BOT_COLOR'] = 0xc4fcff;
+global['SUCCESS_COLOR'] = 0x6dcf84;
 
 // Set up the database connection
 const knex = Knex({
     client: 'mysql',
-    connection: config.database,
+    connection: {
+        driver: process.env.DB_DRIVER,
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT),
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
+        charset: process.env.DB_CHARSET,
+    },
 });
 
 // Register the Knex connection
 Model.knex(knex);
 
+// Specify intents that are required by Discord
+const intents = new Intents();
+intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS');
+
 const client = new CommandoClient({
-    commandPrefix: config.bot.prefix,
-    owner: config.bot.owner,
+    commandPrefix: process.env.BOT_PREFIX,
+    owner: process.env.BOT_OWNER.split(','),
     commandEditableDuration: 0,
-    messageCacheMaxSize: config.bot.messageCache,
+    messageCacheMaxSize: parseInt(process.env.BOT_MESSAGE_CACHE),
     partials: ['REACTION', 'MESSAGE', 'GUILD_MEMBER', 'USER'],
+    ws: { intents: intents },
 });
 client.registry
     .registerDefaultTypes()
     .registerDefaultGroups()
-    .registerDefaultCommands(config.defaultCommands)
+    .registerDefaultCommands({
+        unknownCommand: false,
+        commandState: false,
+        prefix: false,
+        eval: false,
+        help: false,
+    })
     .registerGroups([
         ['general', 'General'],
         ['manage', 'Managing'],
@@ -41,18 +70,27 @@ client.registry
     });
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
-client.login(config.bot.token).catch(console.error);
+client.login(process.env.BOT_TOKEN).catch(console.error);
 
 // When the bot is successfully initialized
-client.once('ready', async () => {
-    const ready = new Ready(client, config);
-    await ready.handle();
-    console.log('ready');
+client.once('ready', () => {
+    const ready = new ReadyEvent(client);
+    return ready.handle();
 });
 
-// Register reaction handlers
-client.on('messageReactionAdd', new MessageReactionAddHandler(config.limits).handler);
-client.on('messageReactionRemove', MessageReactionRemove);
+// Register events
+client.on('guildDelete', (guild: CommandoGuild) => {
+    const event = new GuildDeleteEvent(client, guild);
+    return event.handle();
+});
+client.on('messageReactionAdd', (messageReaction, user) => {
+    const event = new MessageReactionAddEvent(client, messageReaction, user);
+    return event.handle();
+});
+client.on('messageReactionRemove', (messageReaction: MessageReaction, user: User) => {
+    const event = new MessageReactionRemoveEvent(client, messageReaction, user);
+    return event.handle();
+});
 
 // Graceful stop with pm2
 process.on('SIGINT', () => {

@@ -23,8 +23,6 @@ export default class Role extends Model implements IRole {
 
     /**
      * Get the name of the table.
-     *
-     * @returns {string}
      */
     static get tableName(): string {
         return 'roles';
@@ -33,57 +31,46 @@ export default class Role extends Model implements IRole {
     /**
      * Before the update is proceed.
      *
-     * @param   opt
-     * @param   queryContext
+     * @param opt
+     * @param queryContext
      */
     $beforeUpdate(opt: ModelOptions, queryContext: QueryContext) {
-        // The existence of the column must be checked as the user could create the database schema in the 1.0 version
-        if (this.updated_at) {
-            this.updated_at = new Date();
-        }
+        this.updated_at = new Date();
     }
 
     /**
      * Determine whether the emoji role exists for the guild based on the database data.
      *
-     * @param   {string} channelID
-     * @param   {string} messageID
-     * @param   {string} emojiID
-     * @param   {string} roleID
-     * @param   {string} guildID
-     * @returns {Promise<boolean>}
+     * @param messageID
+     * @param emojiID
+     * @param roleID
      */
     static async doesExist(
-        channelID: string,
         messageID: string,
         emojiID: string,
         roleID: string,
-        guildID: string,
     ): Promise<boolean> {
-        const c: number = (
-            await this.query()
-                .where('channel', channelID)
-                .where('message', messageID)
-                .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emojiID])
-                .where('role', roleID)
-                .where('guild', guildID)
-                .count('*')
-                .as('count')
-                .execute()
-        )[0]['count'];
-        return c > 0;
+        const query = await this.query()
+            .where('message', messageID)
+            .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emojiID])
+            .where('role', roleID)
+            .count('*')
+            .as('count')
+            .execute();
+        const count: number = query[0]['count'];
+
+        return count > 0;
     }
 
     /**
      * Create the emoji role by inserting it into the database.
      *
-     * @param   {string} channelID
-     * @param   {string} messageID
-     * @param   {string} emojiID
-     * @param   {string} roleID
-     * @param   {string} guildID
-     * @param   {string} emojiRaw
-     * @returns {Promise<void>}
+     * @param channelID
+     * @param messageID
+     * @param emojiID
+     * @param roleID
+     * @param guildID
+     * @param emojiRaw
      */
     static async createReactionRole(
         channelID: string,
@@ -106,20 +93,17 @@ export default class Role extends Model implements IRole {
     /**
      * Delete the given emoji role for the guild.
      *
-     * @param   {string} channelID
-     * @param   {string} messageID
-     * @param   {string} emojiID
-     * @param   {string} guildID
-     * @returns {Promise<number>}       Number of affected rows.
+     * @param messageID
+     * @param emojiID
+     * @param guildID
+     * @returns Number of affected rows.
      */
     static async deleteReactionRole(
-        channelID: number | string,
-        messageID: number | string,
-        emojiID: number | string,
-        guildID: number | string,
+        messageID: string,
+        emojiID: string,
+        guildID: string,
     ): Promise<number> {
         return this.query()
-            .where('channel', channelID)
             .where('message', messageID)
             .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emojiID])
             .where('guild', guildID)
@@ -127,12 +111,18 @@ export default class Role extends Model implements IRole {
     }
 
     /**
-     * Returns the list of roles for a guild
+     * Delete all reactions roles connected to the guild.
      *
-     * @param {string} id Guild ID
-     * @returns {Promise<Role[]>} List of roles in this guild
+     * @param guildID
+     * @returns Number of affected rows.
      */
-    static async rolesByGuild(id: string): Promise<Role[]> {
-        return this.query().where('guild', id);
+    static async deleteGuildRoles(guildID: string): Promise<number> {
+        return this.query()
+            .where('guild', guildID)
+            .del();
+    }
+
+    static async all(): Promise<Role[]> {
+        return this.query().select();
     }
 }
