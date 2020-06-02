@@ -14,6 +14,7 @@ import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
 import { Model } from 'objection';
 import { Channel, Intents, Message, MessageReaction, Role, User } from 'discord.js';
+import { GuildCreateEvent } from './events/guild.create.event';
 
 const config = dotenv.config({ path: '.env' });
 if (config.error) {
@@ -86,6 +87,10 @@ client.once('ready', () => {
 // Register events
 client.on('channelDelete', (channel: Channel) => {
     const event = new ChannelDeleteEvent(client, channel);
+    return event.handle();
+});
+client.on('guildCreate', (guild: CommandoGuild) => {
+    const event = new GuildCreateEvent(client, guild);
     return event.handle();
 });
 client.on('guildDelete', (guild: CommandoGuild) => {

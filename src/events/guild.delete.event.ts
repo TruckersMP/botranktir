@@ -12,11 +12,16 @@ import { Client } from 'discord.js';
  * This event is fired when the client is kicked from the guild, or when the guild is deleted.
  */
 export class GuildDeleteEvent extends Event {
-    constructor(client: Client, protected guild: CommandoGuild) {
+    constructor(
+        client: Client,
+        protected guild: CommandoGuild,
+    ) {
         super(client);
     }
 
     async handle(): Promise<void> {
+        console.log('left guild', this.guild.id, this.guild.name);
+
         if (process.env.CLEAR_GUILD === 'false') {
             return;
         }
@@ -27,7 +32,5 @@ export class GuildDeleteEvent extends Event {
         // Remove all configurations of the guild
         await Configuration.deleteGuildConfigurations(this.guild.id);
         ConfigurationManager.get().removeGuild(this.guild.id);
-
-        console.log('left guild', this.guild.id, this.guild.name);
     }
 }

@@ -129,6 +129,20 @@ export default class Configuration extends Model implements IConfiguration {
             .del();
     }
 
+    /**
+     * Get all configurations of the specific guild.
+     *
+     * @param guild
+     */
+    static async getGuildConfigurations(guild: string): Promise<Configuration[]> {
+        return this.query()
+            .where('guild', guild)
+            .select();
+    }
+
+    /**
+     * Get all configuration rows.
+     */
     static async all(): Promise<Configuration[]> {
         return this.query().select();
     }

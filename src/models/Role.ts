@@ -144,6 +144,17 @@ export default class Role extends Model implements IRole {
     }
 
     /**
+     * Get all reaction roles for the guild.
+     *
+     * @param guildID
+     */
+    static async getGuildRoles(guildID: string): Promise<Role[]> {
+        return this.query()
+            .where('guild', guildID)
+            .select();
+    }
+
+    /**
      * Get all rows from the database.
      */
     static async all(): Promise<Role[]> {
