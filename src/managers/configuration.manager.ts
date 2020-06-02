@@ -19,7 +19,7 @@ export class ConfigurationManager {
      */
     protected guilds: Map<string, GuildConfigurations>;
 
-    constructor() {
+    protected constructor() {
         this.guilds = new Map<string, GuildConfigurations>();
 
         // Create a map for the global configuration

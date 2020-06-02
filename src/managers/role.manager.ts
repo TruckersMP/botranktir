@@ -41,7 +41,7 @@ export class RoleManager {
      */
     protected managedRolesMap: Map<string, ChannelMessages>;
 
-    constructor() {
+    protected constructor() {
         this.managedRoles = new Map<string, ManagedRole>();
         this.managedRoleMessages = new Map<string, string[]>();
         this.managedRolesMap = new Map<string, ChannelMessages>();
