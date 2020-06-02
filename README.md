@@ -1,5 +1,7 @@
 <p align="center"><img src="https://truckersmp.com/assets/img/truckersmp-logo-sm.png"></p>
 
+# Botranktir
+
 ## Introduction
 
 Botranktir is a Discord bot that takes care of reaction roles. It also provides a single use reaction roles,

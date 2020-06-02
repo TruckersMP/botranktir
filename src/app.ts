@@ -54,6 +54,7 @@ const client = new CommandoClient({
     messageCacheMaxSize: parseInt(process.env.BOT_MESSAGE_CACHE),
     partials: ['REACTION', 'MESSAGE', 'GUILD_MEMBER', 'USER'], // https://discordjs.guide/popular-topics/partials.html
     ws: { intents: intents },
+    disableMentions: 'all',
 });
 client.registry
     .registerDefaultTypes()
