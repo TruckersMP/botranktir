@@ -15,7 +15,7 @@ module.exports = class AddRoleCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'addrole',
-            group: 'manage',
+            group: 'roles',
             memberName: 'addrole',
             description:
                 'Add reaction to the message that will assign the role to the member or ' +

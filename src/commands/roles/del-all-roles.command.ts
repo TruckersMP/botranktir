@@ -7,7 +7,7 @@ module.exports = class DeleteRoleCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'delallroles',
-            group: 'manage',
+            group: 'roles',
             memberName: 'delallroles',
             description: 'Remove all reaction roles from the message.',
             examples: ['delallroles #welcome 580458877531979786'],

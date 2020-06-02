@@ -6,7 +6,7 @@ module.exports = class FetchMessageCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             name: 'fetchmessage',
-            group: 'manage',
+            group: 'roles',
             memberName: 'fetchmessage',
             description: 'Get all reaction roles that are registered for the message.',
             examples: ['fetchmessage #welcome 580458877531979786'],

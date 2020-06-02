@@ -66,7 +66,8 @@ client.registry
     })
     .registerGroups([
         ['general', 'General'],
-        ['manage', 'Managing'],
+        ['manage', 'Management'],
+        ['roles', 'Role Management'],
     ])
     .registerCommandsIn({
         dirname: path.join(__dirname, 'commands'),
