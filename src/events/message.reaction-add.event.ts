@@ -10,6 +10,10 @@ import { ConfigurationManager } from '../managers/configuration.manager';
  */
 export class MessageReactionAddEvent extends MessageReactionEvent {
     async handle(): Promise<void> {
+        if (this.user.bot) {
+            return;
+        }
+
         const data = await this.fetchData(this.reaction, this.user).catch(e => console.error('fetching reaction data\n', e));
         if (!data) {
             return;
@@ -32,6 +36,12 @@ export class MessageReactionAddEvent extends MessageReactionEvent {
                 .remove(this.user)
                 .catch(e => console.error('removing reaction role due to limits\n', e));
         } else {
+            if (RoleManager.get().isRoleSingleUse(data.message.id, role)) {
+                data.reaction.users
+                    .remove(this.user)
+                    .catch(e => console.error('removing reaction role as it is a single use reaction role\n', e));
+            }
+
             // Add the reaction role to the user
             data.member.roles.add(role).catch(e => console.error('adding reaction role\n', e));
         }

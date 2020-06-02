@@ -61,7 +61,8 @@ module.exports = class FetchMessageCommand extends Command {
         for (const [, value] of roles) {
             const guildRole = message.guild.roles.resolve(value.role);
             const roleName = guildRole ? guildRole.name : '*Unknown*';
-            embed.addField(roleName, value.raw, true);
+            const text = value.raw + (value.singleUse ? ' (single use)' : '');
+            embed.addField(roleName, text, true);
         }
 
         return message.channel.send(embed);

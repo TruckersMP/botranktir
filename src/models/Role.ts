@@ -9,6 +9,7 @@ interface IRole {
     role: string;
     guild: string;
     emoji_raw: string;
+    single_use: boolean;
 }
 
 export default class Role extends Model implements IRole {
@@ -20,6 +21,7 @@ export default class Role extends Model implements IRole {
     role: string;
     guild: string;
     emoji_raw: string;
+    single_use: boolean;
 
     /**
      * Get the name of the table.
@@ -71,6 +73,7 @@ export default class Role extends Model implements IRole {
      * @param roleID
      * @param guildID
      * @param emojiRaw
+     * @param singleUse
      */
     static async createReactionRole(
         channelID: string,
@@ -79,6 +82,7 @@ export default class Role extends Model implements IRole {
         roleID: string,
         guildID: string,
         emojiRaw: string,
+        singleUse: boolean = false,
     ): Promise<void> {
         await this.query().insert({
             channel: channelID,
@@ -87,7 +91,29 @@ export default class Role extends Model implements IRole {
             role: roleID,
             guild: guildID,
             emoji_raw: emojiRaw,
+            single_use: singleUse,
         });
+    }
+
+    /**
+     * Update the single use status of the reaction role.
+     *
+     * @param messageID
+     * @param emojiID
+     * @param roleID
+     * @param singleUse
+     */
+    static async updateRoleSingleUse(
+        messageID: string,
+        emojiID: string,
+        roleID: string,
+        singleUse: boolean,
+    ): Promise<void> {
+        await this.query()
+            .where('message', messageID)
+            .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emojiID])
+            .where('role', roleID)
+            .update({ single_use: singleUse });
     }
 
     /**

@@ -9,6 +9,7 @@ type ManagedRole = {
 export type ManagedRoleEmoji = {
     role: string;
     raw: string;
+    singleUse: boolean;
 };
 
 type ChannelMessages = Map<string, MessageRoles>;
@@ -64,7 +65,7 @@ export class RoleManager {
      */
     fetchRoles(roles: Role[]): void {
         for (const role of roles) {
-            this.addRole(role.guild, role.channel, role.message, role.role, role.emoji_raw);
+            this.addRole(role.guild, role.channel, role.message, role.role, role.emoji_raw, role.single_use);
         }
     }
 
@@ -76,8 +77,16 @@ export class RoleManager {
      * @param message
      * @param role
      * @param emojiID
+     * @param singleUse
      */
-    addRole(guild: string, channel: string, message: string, role: string, emojiID: string): void {
+    addRole(
+        guild: string,
+        channel: string,
+        message: string,
+        role: string,
+        emojiID: string,
+        singleUse: boolean = false,
+    ): void {
         // Create the object for the guild if it does not exist
         if (!this.managedRolesMap.has(guild)) {
             this.managedRolesMap.set(guild, new Map<string, MessageRoles>());
@@ -91,12 +100,41 @@ export class RoleManager {
             this.managedRolesMap.get(guild).get(channel).set(message, new Map<string, ManagedRoleEmoji>());
         }
 
-        this.managedRolesMap.get(guild).get(channel).get(message).set(emojiID, { role: role, raw: emojiID });
+        this.managedRolesMap.get(guild).get(channel).get(message).set(emojiID, { role: role, raw: emojiID, singleUse });
         this.managedRoles.set(`${message}.${role}`, { guildID: guild, channelID: channel, messageID: message });
 
         const messages = this.getRoleMessages(role);
         messages.push(message);
         this.managedRoleMessages.set(role, messages);
+    }
+
+    /**
+     * Update the single use state of the reaction role.
+     *
+     * @param guild
+     * @param channel
+     * @param message
+     * @param role
+     * @param emojiID
+     * @param singleUse
+     */
+    updateRoleSingleUse(
+        guild: string,
+        channel: string,
+        message: string,
+        role: string,
+        emojiID: string,
+        singleUse: boolean,
+    ): boolean {
+        const roleData = this.getRoleData(guild, channel, message, role);
+        if (!roleData) {
+            return false;
+        }
+
+        roleData.singleUse = !roleData.singleUse;
+        this.managedRolesMap.get(guild).get(channel).get(message).set(emojiID, roleData);
+
+        return true;
     }
 
     /**
@@ -194,7 +232,8 @@ export class RoleManager {
      * {
      *     "579609125831573504": {                          // Emoji ID/unicode
      *         "role": "352802547313934336",                // Role ID
-     *         "raw": "<:truckersmp:579609125831573504>"    // Emoji as raw
+     *         "raw": "<:truckersmp:579609125831573504>",   // Emoji as raw
+     *         "singleUse": false                           // Is it single use reaction role?
      *     }
      * }
      * ```
@@ -236,6 +275,26 @@ export class RoleManager {
     }
 
     /**
+     * Get the role data by the forwarded criteria.
+     *
+     * @param guild
+     * @param channel
+     * @param message
+     * @param role
+     */
+    getRoleData(guild: string, channel: string, message: string, role: string): ManagedRoleEmoji | null {
+        const roles = this.getRoles(guild, channel, message);
+
+        for (const [, value] of roles) {
+            if (value.role === role) {
+                return value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get the emoji ID/unicode for the role on the given message.
      *
      * @param guildID
@@ -250,7 +309,7 @@ export class RoleManager {
             return null;
         }
 
-        for (const [key, value] of roles.entries()) {
+        for (const [key, value] of roles) {
             if (value.role === roleID) {
                 return key;
             }
@@ -266,6 +325,26 @@ export class RoleManager {
      */
     isManagedRole(roleID: string): boolean {
         return this.managedRoleMessages.has(roleID);
+    }
+
+    /**
+     * Check whether the role is single use only.
+     *
+     * @param message
+     * @param role
+     */
+    isRoleSingleUse(message: string, role: string): boolean | undefined {
+        const location = this.getRoleLocation(message, role);
+        if (!location) {
+            return undefined;
+        }
+
+        const roleData = this.getRoleData(location.guildID, location.channelID, message, role);
+        if (!roleData) {
+            return undefined;
+        }
+
+        return roleData.singleUse;
     }
 
     /**
