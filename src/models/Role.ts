@@ -95,18 +95,15 @@ export default class Role extends Model implements IRole {
      *
      * @param messageID
      * @param emojiID
-     * @param guildID
      * @returns Number of affected rows.
      */
     static async deleteReactionRole(
         messageID: string,
         emojiID: string,
-        guildID: string,
     ): Promise<number> {
         return this.query()
             .where('message', messageID)
             .whereRaw('`emoji` COLLATE utf8mb4_bin = ?', [emojiID])
-            .where('guild', guildID)
             .del();
     }
 
@@ -122,6 +119,33 @@ export default class Role extends Model implements IRole {
             .del();
     }
 
+    /**
+     * Delete all reaction roles connected to the channel.
+     *
+     * @param channelID
+     * @returns Number of affected rows.
+     */
+    static async deleteChannelRoles(channelID: string): Promise<number> {
+        return this.query()
+            .where('channel', channelID)
+            .del();
+    }
+
+    /**
+     * Delete all reaction roles connected to the message.
+     *
+     * @param messageID
+     * @returns Number of affected rows.
+     */
+    static async deleteMessageRoles(messageID: string): Promise<number> {
+        return this.query()
+            .where('message', messageID)
+            .del();
+    }
+
+    /**
+     * Get all rows from the database.
+     */
     static async all(): Promise<Role[]> {
         return this.query().select();
     }

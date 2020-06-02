@@ -1,5 +1,5 @@
 import { Client, GuildMember, Message, MessageReaction, User } from 'discord.js';
-import { Event } from '../event';
+import { Event } from './event';
 
 type ReactionData = {
     reaction: MessageReaction;

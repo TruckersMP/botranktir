@@ -74,7 +74,7 @@ module.exports = class AddRoleCommand extends Command {
         ) {
             return message.reply(
                 'please, provide valid parameters! For more information, ' +
-                `run command \`${this.client.commandPrefix}help addrole\``,
+                `run command \`${this.client.commandPrefix}help ${this.name}\``,
             );
         }
 

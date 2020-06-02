@@ -62,7 +62,7 @@ module.exports = class DeleteRoleCommand extends Command {
         ) {
             return message.reply(
                 'please, provide valid parameters! For more information, ' +
-                `run command \`${this.client.commandPrefix}help delrole\``,
+                `run command \`${this.client.commandPrefix}help ${this.name}\``,
             );
         }
 
@@ -71,7 +71,6 @@ module.exports = class DeleteRoleCommand extends Command {
         const affectedRows = await Role.deleteReactionRole(
             args.messageID,
             emoji.id,
-            message.guild.id,
         );
 
         if (affectedRows === 0) {
@@ -81,8 +80,7 @@ module.exports = class DeleteRoleCommand extends Command {
         // Remove the reaction if it was removed from the database since
         // we want to remove only reactions for roles, not others
         try {
-            const messages = await args.channel.messages.fetch();
-            const channelMessage = messages.get(args.messageID);
+            const channelMessage = await args.channel.messages.fetch(args.messageID);
             const messageReaction = channelMessage.reactions.resolve(emoji.id);
             if (messageReaction) {
                 await messageReaction.remove();

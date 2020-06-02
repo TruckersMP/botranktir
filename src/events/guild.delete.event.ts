@@ -1,9 +1,9 @@
 import { CommandoGuild } from 'discord.js-commando';
-import { ConfigurationManager } from '../../managers/configuration.manager';
-import { RoleManager } from '../../managers/role.manager';
-import Configuration from '../../models/Configuration';
-import Role from '../../models/Role';
-import { Event } from '../event';
+import { ConfigurationManager } from '../managers/configuration.manager';
+import { RoleManager } from '../managers/role.manager';
+import Configuration from '../models/Configuration';
+import Role from '../models/Role';
+import { Event } from './event';
 import { Client } from 'discord.js';
 
 /**

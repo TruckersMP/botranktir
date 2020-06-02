@@ -1,5 +1,5 @@
 import { MessageReactionEvent } from './message.reaction.event';
-import { RoleManager } from '../../managers/role.manager';
+import { RoleManager } from '../managers/role.manager';
 
 /**
  * Handle `messageReactionRemove` events from Discord.

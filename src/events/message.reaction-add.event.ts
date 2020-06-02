@@ -1,7 +1,7 @@
-import { RoleManager } from '../../managers/role.manager';
+import { RoleManager } from '../managers/role.manager';
 import { MessageReactionEvent } from './message.reaction.event';
 import { GuildMember } from 'discord.js';
-import { ConfigurationManager } from '../../managers/configuration.manager';
+import { ConfigurationManager } from '../managers/configuration.manager';
 
 /**
  * Handle `messageReactionAdd` events from Discord.

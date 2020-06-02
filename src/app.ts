@@ -4,12 +4,16 @@ import * as dotenv from 'dotenv';
 import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import * as path from 'path';
 import * as Knex from 'knex';
-import { GuildDeleteEvent } from './events/guild/guild.delete.event';
-import { MessageReactionAddEvent } from './events/message/message.reaction-add.event';
-import { MessageReactionRemoveEvent } from './events/message/message.reaction-remove.event';
+import { ChannelDeleteEvent } from './events/channel.delete.event';
+import { GuildDeleteEvent } from './events/guild.delete.event';
+import { MessageDeleteEvent } from './events/message.delete.event';
+import { MessageDeleteBulkEvent } from './events/message.delete-bulk.event';
+import { MessageReactionAddEvent } from './events/message.reaction-add.event';
+import { MessageReactionRemoveEvent } from './events/message.reaction-remove.event';
+import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
 import { Model } from 'objection';
-import { Intents, MessageReaction, User } from 'discord.js';
+import { Channel, Intents, Message, MessageReaction, Role, User } from 'discord.js';
 
 const config = dotenv.config({ path: '.env' });
 if (config.error) {
@@ -47,7 +51,7 @@ const client = new CommandoClient({
     owner: process.env.BOT_OWNER.split(','),
     commandEditableDuration: 0,
     messageCacheMaxSize: parseInt(process.env.BOT_MESSAGE_CACHE),
-    partials: ['REACTION', 'MESSAGE', 'GUILD_MEMBER', 'USER'],
+    partials: ['REACTION', 'MESSAGE', 'GUILD_MEMBER', 'USER'], // https://discordjs.guide/popular-topics/partials.html
     ws: { intents: intents },
 });
 client.registry
@@ -79,8 +83,20 @@ client.once('ready', () => {
 });
 
 // Register events
+client.on('channelDelete', (channel: Channel) => {
+    const event = new ChannelDeleteEvent(client, channel);
+    return event.handle();
+});
 client.on('guildDelete', (guild: CommandoGuild) => {
     const event = new GuildDeleteEvent(client, guild);
+    return event.handle();
+});
+client.on('messageDelete', (message: Message) => {
+    const event = new MessageDeleteEvent(client, message);
+    return event.handle();
+});
+client.on('messageDeleteBulk', messages => {
+    const event = new MessageDeleteBulkEvent(client, messages);
     return event.handle();
 });
 client.on('messageReactionAdd', (messageReaction, user) => {
@@ -89,6 +105,10 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 });
 client.on('messageReactionRemove', (messageReaction: MessageReaction, user: User) => {
     const event = new MessageReactionRemoveEvent(client, messageReaction, user);
+    return event.handle();
+});
+client.on('roleDelete', (role: Role) => {
+    const event = new RoleDeleteEvent(client, role);
     return event.handle();
 });
 
