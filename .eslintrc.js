@@ -10,6 +10,7 @@ module.exports = {
         'sourceType': 'module',
     },
     'rules': {
+        'arrow-parens': 'warn',
         'brace-style': ['error', '1tbs', { 'allowSingleLine': false }],
         'comma-dangle': ['error', 'always-multiline'],
         'comma-spacing': 'error',

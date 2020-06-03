@@ -161,7 +161,7 @@ export class RoleManager {
         if (messages.length === 1) {
             this.managedRoleMessages.delete(role);
         } else {
-            this.managedRoleMessages.set(role, messages.filter(roleMessage => roleMessage !== message));
+            this.managedRoleMessages.set(role, messages.filter((roleMessage: string) => roleMessage !== message));
         }
 
         return true;

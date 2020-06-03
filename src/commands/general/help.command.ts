@@ -41,7 +41,7 @@ module.exports = class HelpCommand extends Command {
             }
             text.push('');
 
-            commands.forEach(command => {
+            commands.forEach((command: Command) => {
                 if (!command.isUsable(msg) || (command.hidden && !this.client.isOwner(message.author))) {
                     return;
                 }

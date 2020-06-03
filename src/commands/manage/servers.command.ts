@@ -20,8 +20,8 @@ module.exports = class ServersCommand extends Command {
         const client = this.client;
 
         const servers = client.guilds.cache.size;
-        const partneredServers = client.guilds.cache.filter(guild => guild.partnered).size;
-        const verifiedServers = client.guilds.cache.filter(guild => guild.verified).size;
+        const partneredServers = client.guilds.cache.filter((guild: Guild) => guild.partnered).size;
+        const verifiedServers = client.guilds.cache.filter((guild: Guild) => guild.verified).size;
         const members = client.guilds.cache.reduce((count: number, guild: Guild) => count + guild.memberCount, 0);
         const shards = client.shard ? client.shard.count : 0;
         const roles = RoleManager.get().count();

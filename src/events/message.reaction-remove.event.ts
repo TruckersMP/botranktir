@@ -12,7 +12,9 @@ export class MessageReactionRemoveEvent extends MessageReactionEvent {
             return;
         }
 
-        const data = await this.fetchData(this.reaction, this.user).catch(e => console.error('fetching reaction data\n', e));
+        const data = await this
+            .fetchData(this.reaction, this.user)
+            .catch((e) => console.error('fetching reaction data\n', e));
         if (!data) {
             return;
         }
@@ -32,6 +34,6 @@ export class MessageReactionRemoveEvent extends MessageReactionEvent {
             return;
         }
 
-        data.member.roles.remove(role).catch(e => console.log('removing reaction role', e));
+        data.member.roles.remove(role).catch((e) => console.log('removing reaction role', e));
     }
 }

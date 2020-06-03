@@ -1,6 +1,4 @@
-// Load config variables
 import * as dotenv from 'dotenv';
-// Load libraries
 import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import * as path from 'path';
 import * as Knex from 'knex';
@@ -13,9 +11,10 @@ import { MessageReactionRemoveEvent } from './events/message.reaction-remove.eve
 import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
 import { Model } from 'objection';
-import { Channel, Intents, Message, MessageReaction, Role, User } from 'discord.js';
+import { Channel, Collection, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
 import { GuildCreateEvent } from './events/guild.create.event';
 
+// Load config variables
 const config = dotenv.config({ path: '.env' });
 if (config.error) {
     console.error('configuration could not be parsed\n', config.error);
@@ -102,11 +101,11 @@ client.on('messageDelete', (message: Message) => {
     const event = new MessageDeleteEvent(client, message);
     return event.handle();
 });
-client.on('messageDeleteBulk', messages => {
+client.on('messageDeleteBulk', (messages: Collection<Snowflake, Message>) => {
     const event = new MessageDeleteBulkEvent(client, messages);
     return event.handle();
 });
-client.on('messageReactionAdd', (messageReaction, user) => {
+client.on('messageReactionAdd', (messageReaction: MessageReaction, user: User) => {
     const event = new MessageReactionAddEvent(client, messageReaction, user);
     return event.handle();
 });
