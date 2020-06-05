@@ -15,7 +15,7 @@ very advanced configuration of a guild and more.
 ## Installation
 
 1. Download the repository.
-2. Run the `npm install` command in the root folder.
+2. Run the `npm ci` command in the root folder.
 3. Copy the example environment file (`/.env.example`) and create your own one (`/.env`).
 4. Create a new database.
 5. Create a Discord application. Set up a bot user and enable both Presence and Server Members Intents.
