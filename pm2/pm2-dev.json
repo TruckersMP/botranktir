@@ -1,0 +1,13 @@
+{
+    "apps": [
+        {
+            "name": "Botranktir",
+            "script": "ts-node",
+            "args": "--files --project tsconfig.json src/app.ts",
+            "env": {
+                "NODE_ENV": "development",
+                "LOCAL": true
+            }
+        }
+    ]
+}

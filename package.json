@@ -1,24 +1,39 @@
 {
-  "name": "botranktir",
-  "version": "1.1.6",
-  "description": "Discord bot that manages roles after reacting to a message",
-  "main": "src/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "pm2 start pm2.json",
-    "reload": "pm2 reload pm2.json",
-    "dev": "pm2-dev start pm2.json --env=development",
-    "kill": "pm2 delete pm2.json"
-  },
-  "author": "TruckersMP",
-  "license": "MIT",
-  "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
-    "discord.js-commando": "github:discordjs/Commando",
-    "eslint": "^6.2.1",
-    "knex": "^0.19.5",
-    "mysql": "^2.17.1",
-    "objection": "^1.6.9",
-    "pm2": "^3.5.1"
-  }
+    "name": "botranktir",
+    "version": "2.0.0",
+    "description": "Discord bot that manages roles after reacting to a message",
+    "main": "build/src/app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prod": "tsc && pm2 start pm2/pm2.json",
+        "reload": "tsc && pm2 reload pm2/pm2.json",
+        "dev": "pm2-dev start pm2/pm2-dev.json",
+        "kill": "pm2 delete pm2/pm2.json",
+        "build": "tsc",
+        "eslint": "eslint --ext .ts,.js src/ --fix"
+    },
+    "author": "TruckersMP",
+    "license": "MIT",
+    "repository": {
+        "url": "https://github.com/TruckersMP/botranktir"
+    },
+    "dependencies": {
+        "discord.js": "^12.2.0",
+        "discord.js-commando": "github:discordjs/Commando",
+        "dotenv": "^8.2.0",
+        "knex": "^0.21.1",
+        "mysql": "^2.18.1",
+        "numeral": "^2.0.6",
+        "objection": "^2.1.5",
+        "pm2": "^4.4.0"
+    },
+    "devDependencies": {
+        "@types/dotenv": "^8.2.0",
+        "@types/node": "^14.0.9",
+        "@types/numeral": "0.0.28",
+        "@typescript-eslint/parser": "^3.1.0",
+        "eslint": "^7.1.0",
+        "ts-node": "^8.10.2",
+        "typescript": "^3.9.3"
+    }
 }
