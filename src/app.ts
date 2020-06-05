@@ -44,7 +44,7 @@ Model.knex(knex);
 
 // Specify intents that are required by Discord
 const intents = new Intents();
-intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS');
+intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES');
 
 const client = new CommandoClient({
     commandPrefix: process.env.BOT_PREFIX,
@@ -72,7 +72,7 @@ client.registry
     ])
     .registerCommandsIn({
         dirname: path.join(__dirname, 'commands'),
-        filter: /^[^.].*\.ts$/, // https://github.com/discordjs/Commando/issues/297
+        filter: /^[^.].*\.(ts|js)$/g, // https://github.com/discordjs/Commando/issues/297
     });
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
