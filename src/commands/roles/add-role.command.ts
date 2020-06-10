@@ -135,9 +135,9 @@ module.exports = class AddRoleCommand extends Command {
                         emoji.id,
                         args.role.id,
                         guild.id,
-                        args.emojiRaw,
+                        emoji.raw,
                     );
-                    RoleManager.get().addRole(guild.id, args.channel.id, args.messageID, args.role.id, args.emojiRaw);
+                    RoleManager.get().addRole(guild.id, args.channel.id, args.messageID, args.role.id, emoji);
 
                     return message.reply('the reaction for the role has been successfully added.');
                 },
