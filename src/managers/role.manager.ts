@@ -1,5 +1,5 @@
 import Role from '../models/Role';
-import { Emoji } from '../structures/Emoji';
+import Emoji from '../structures/Emoji';
 
 type ManagedRole = {
     guildID: string;
