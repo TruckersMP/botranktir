@@ -1,5 +1,6 @@
 import { MessageReactionEvent } from './message.reaction.event';
 import { RoleManager } from '../managers/role.manager';
+import { Emoji } from '../structures/Emoji';
 
 /**
  * Handle `messageReactionRemove` events from Discord.
@@ -19,11 +20,13 @@ export class MessageReactionRemoveEvent extends MessageReactionEvent {
             return;
         }
 
+        const emoji = new Emoji(data.reaction.emoji.toString());
+
         const role = RoleManager.get().getRole(
             data.message.guild.id,
             data.message.channel.id,
             data.message.id,
-            data.reaction.emoji.name,
+            emoji.id,
         );
         if (!role) {
             return;

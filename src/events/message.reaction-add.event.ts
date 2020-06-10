@@ -2,6 +2,7 @@ import { RoleManager } from '../managers/role.manager';
 import { MessageReactionEvent } from './message.reaction.event';
 import { GuildMember, Role } from 'discord.js';
 import { ConfigurationManager } from '../managers/configuration.manager';
+import { Emoji } from '../structures/Emoji';
 
 /**
  * Handle `messageReactionAdd` events from Discord.
@@ -21,11 +22,13 @@ export class MessageReactionAddEvent extends MessageReactionEvent {
             return;
         }
 
+        const emoji = new Emoji(data.reaction.emoji.toString());
+
         const role = RoleManager.get().getRole(
             data.message.guild.id,
             data.message.channel.id,
             data.message.id,
-            data.reaction.emoji.name,
+            emoji.id,
         );
         // There is no reaction role for the reaction
         if (!role) {

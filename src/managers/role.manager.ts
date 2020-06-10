@@ -1,4 +1,5 @@
 import Role from '../models/Role';
+import { Emoji } from '../structures/Emoji';
 
 type ManagedRole = {
     guildID: string;
@@ -65,7 +66,8 @@ export class RoleManager {
      */
     fetchRoles(roles: Role[]): void {
         for (const role of roles) {
-            this.addRole(role.guild, role.channel, role.message, role.role, role.emoji_raw, role.single_use);
+            const emoji = new Emoji(role.emoji_raw);
+            this.addRole(role.guild, role.channel, role.message, role.role, emoji, role.single_use);
         }
     }
 
@@ -76,7 +78,7 @@ export class RoleManager {
      * @param channel
      * @param message
      * @param role
-     * @param emojiID
+     * @param emoji
      * @param singleUse
      */
     addRole(
@@ -84,7 +86,7 @@ export class RoleManager {
         channel: string,
         message: string,
         role: string,
-        emojiID: string,
+        emoji: Emoji,
         singleUse: boolean = false,
     ): void {
         // Create the object for the guild if it does not exist
@@ -100,7 +102,8 @@ export class RoleManager {
             this.managedRolesMap.get(guild).get(channel).set(message, new Map<string, ManagedRoleEmoji>());
         }
 
-        this.managedRolesMap.get(guild).get(channel).get(message).set(emojiID, { role: role, raw: emojiID, singleUse });
+        const reactionRoleData = { role: role, raw: emoji.raw, singleUse };
+        this.managedRolesMap.get(guild).get(channel).get(message).set(emoji.id, reactionRoleData);
         this.managedRoles.set(`${message}.${role}`, { guildID: guild, channelID: channel, messageID: message });
 
         const messages = this.getRoleMessages(role);
