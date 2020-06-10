@@ -2,7 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import * as Discord from 'discord.js';
 import Role from '../../models/Role';
 import { RoleManager } from '../../managers/role.manager';
-import { Emoji } from '../../structures/Emoji';
+import Emoji from '../../structures/Emoji';
 
 interface Arguments {
     channel: Discord.TextChannel | null;

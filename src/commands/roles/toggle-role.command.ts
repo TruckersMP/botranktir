@@ -1,7 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, TextChannel } from 'discord.js';
-import { Emoji } from '../../structures/Emoji';
 import { RoleManager } from '../../managers/role.manager';
+import Emoji from '../../structures/Emoji';
 import Role from '../../models/Role';
 
 interface Arguments {

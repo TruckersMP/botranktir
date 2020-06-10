@@ -1,7 +1,7 @@
 {
     "limit": {
         "name": "Maximum reaction roles",
-        "description": "Specify the maximum amount of reaction roles per a user",
+        "description": "Specify the maximum amount of reaction roles per a user. 0 = disabled",
         "defaultValue": "0",
         "guild": true
     }
