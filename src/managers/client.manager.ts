@@ -22,6 +22,10 @@ export class ClientManager {
      * Instance of the Discord client.
      */
     protected client: Client | undefined;
+    /**
+     * Timestamp of when the client was loaded up.
+     */
+    protected startedAt: Date | undefined;
 
     protected constructor() {
         this.initialized = false;
@@ -48,6 +52,7 @@ export class ClientManager {
         }
 
         this.client = client;
+        this.startedAt = new Date();
 
         this.initialized = true;
     }
@@ -76,6 +81,13 @@ export class ClientManager {
      */
     isInitialized(): boolean {
         return this.initialized;
+    }
+
+    /**
+     * Get the instance of the Date class of when the bot was loaded up.
+     */
+    getStartedAt(): Date | undefined {
+        return this.startedAt;
     }
 
     /**
