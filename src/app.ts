@@ -1,8 +1,9 @@
 import * as dotenv from 'dotenv';
-import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import * as path from 'path';
 import * as Knex from 'knex';
+import { Model } from 'objection';
 import { ChannelDeleteEvent } from './events/channel.delete.event';
+import { GuildCreateEvent } from './events/guild.create.event';
 import { GuildDeleteEvent } from './events/guild.delete.event';
 import { MessageDeleteEvent } from './events/message.delete.event';
 import { MessageDeleteBulkEvent } from './events/message.delete-bulk.event';
@@ -10,9 +11,9 @@ import { MessageReactionAddEvent } from './events/message.reaction-add.event';
 import { MessageReactionRemoveEvent } from './events/message.reaction-remove.event';
 import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
-import { Model } from 'objection';
 import { Channel, Collection, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
-import { GuildCreateEvent } from './events/guild.create.event';
+import { CommandoClient, CommandoGuild } from 'discord.js-commando';
+import { ClientManager } from './managers/client.manager';
 
 // Load config variables
 const config = dotenv.config({ path: '.env' });
@@ -77,6 +78,10 @@ client.registry
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
 client.login(process.env.BOT_TOKEN).catch(console.error);
+
+// Initialize all global objects and load data to the local storage
+ClientManager.get().init(client);
+ClientManager.get().load().then(() => console.log('objects have been initialized'));
 
 // When the bot is successfully initialized
 client.once('ready', () => {

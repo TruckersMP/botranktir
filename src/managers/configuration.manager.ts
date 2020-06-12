@@ -89,6 +89,23 @@ export class ConfigurationManager {
     }
 
     /**
+     * Get all guilds with custom configurations from the local storage.
+     *
+     * @param ignoreGlobalConfig    Whether the key of the global bot configuration should be excluded
+     * @returns Keys of a map copy
+     */
+    getGuilds(ignoreGlobalConfig: boolean = false): IterableIterator<string> {
+        // Copy the map over in order not to have side effects
+        const guilds = new Map(this.guilds);
+
+        if (ignoreGlobalConfig) {
+            guilds.delete(this.resolveGuild());
+        }
+
+        return guilds.keys();
+    }
+
+    /**
      * Get the map of configurations from the local storage per the specific guild.
      *
      * @param guild
