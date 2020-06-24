@@ -228,6 +228,20 @@ export class RoleManager {
     }
 
     /**
+     * Get Snowflakes of all guilds with reaction roles from the local storage.
+     */
+    getManagedGuilds(): IterableIterator<string> {
+        return this.managedRolesMap.keys();
+    }
+
+    /**
+     * Get location information about all stored reaction roles in the local storage.
+     */
+    getManagedRoles(): IterableIterator<ManagedRole> {
+        return this.managedRoles.values();
+    }
+
+    /**
      * Get all reaction roles for the given message.
      *
      * Example of the result:

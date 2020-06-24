@@ -3,6 +3,7 @@ import Configuration from '../models/Configuration';
 import { Client } from 'discord.js-commando';
 import { RoleManager } from './role.manager';
 import { ConfigurationManager } from './configuration.manager';
+import { TextChannel } from 'discord.js';
 
 /**
  * Manages the Discord client instance.
@@ -103,7 +104,7 @@ export class ClientManager {
         await ClientManager.setActivity(this.client);
 
         await this.clearConfigurations();
-        // TODO: Add clearing old reaction roles (per a guild + a channel + a message?)
+        await this.clearReactionRoles();
     }
 
     /**
@@ -121,6 +122,77 @@ export class ClientManager {
 
             await Configuration.deleteGuildConfigurations(guild);
             ConfigurationManager.get().removeGuild(guild);
+        }
+    }
+
+    /**
+     * Clear all reaction roles of channels and messages that have been
+     * removed. Guild roles will be removed only if the cleanup is enabled.
+     */
+    protected async clearReactionRoles(): Promise<void> {
+        for (const guildId of RoleManager.get().getManagedGuilds()) {
+            await this.clearGuildRoles(guildId);
+        }
+    }
+
+    /**
+     * Clear all reaction roles of the guild.
+     *
+     * This method also goes through all channels and messages with reaction
+     * roles, and delete the instances if the original location was removed.
+     *
+     * @param guildID
+     */
+    async clearGuildRoles(guildID: string): Promise<void> {
+        const guild = this.client.guilds.resolve(guildID);
+        if (!guild) {
+            if (process.env.CLEAR_GUILD === 'false') {
+                return;
+            }
+
+            await Role.deleteGuildRoles(guildID);
+            RoleManager.get().removeGuild(guildID);
+
+            return;
+        }
+
+        const channels: string[] = [];
+        // Map of messages in the channel
+        const messages = new Map<string, string[]>();
+        for (const role of RoleManager.get().getManagedRoles()) {
+            if (role.guildID !== guildID) {
+                continue;
+            }
+
+            if (!channels.includes(role.channelID)) {
+                channels.push(role.channelID);
+                messages.set(role.channelID, []);
+            }
+            if (!messages.get(role.channelID).includes(role.messageID)) {
+                messages.get(role.channelID).push(role.messageID);
+            }
+        }
+
+        for (const channelID of channels) {
+            const channel = guild.channels.resolve(channelID);
+            if (!channel) {
+                await Role.deleteChannelRoles(channelID);
+                RoleManager.get().removeChannel(guildID, channelID);
+
+                // As messages are connected to channels, they will be removed
+                // along with the above cleanup. Therefore, we do not need to
+                // loop through channel's messages, and the script can continue
+                continue;
+            }
+
+            const textChannel = <TextChannel>channel;
+            for (const messageID of messages.get(channelID)) {
+                const message = await textChannel.messages.fetch(messageID);
+                if (!message) {
+                    await Role.deleteMessageRoles(messageID);
+                    RoleManager.get().removeMessage(guildID, channelID, messageID);
+                }
+            }
         }
     }
 
