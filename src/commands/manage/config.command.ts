@@ -23,8 +23,8 @@ module.exports = class ConfigCommand extends Command {
             clientPermissions: ['EMBED_LINKS'],
             guildOnly: true,
             throttling: {
-                usages: 1,
-                duration: 5,
+                usages: 5,
+                duration: 15,
             },
             args: [
                 {

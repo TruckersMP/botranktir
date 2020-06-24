@@ -3,6 +3,9 @@ import * as path from 'path';
 import * as Knex from 'knex';
 import { Model } from 'objection';
 import { ChannelDeleteEvent } from './events/channel.delete.event';
+import { EmojiCreateEvent } from './events/emoji.create.event';
+import { EmojiDeleteEvent } from './events/emoji.delete.event';
+import { EmojiUpdateEvent } from './events/emoji.update.event';
 import { GuildCreateEvent } from './events/guild.create.event';
 import { GuildDeleteEvent } from './events/guild.delete.event';
 import { MessageDeleteEvent } from './events/message.delete.event';
@@ -11,7 +14,7 @@ import { MessageReactionAddEvent } from './events/message.reaction-add.event';
 import { MessageReactionRemoveEvent } from './events/message.reaction-remove.event';
 import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
-import { Channel, Collection, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
+import { Channel, Collection, GuildEmoji, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
 import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import { ClientManager } from './managers/client.manager';
 
@@ -45,7 +48,15 @@ Model.knex(knex);
 
 // Specify intents that are required by Discord
 const intents = new Intents();
-intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES');
+intents.add(
+    'GUILDS',
+    'GUILD_MEMBERS',
+    'GUILD_EMOJIS',
+    'GUILD_PRESENCES',
+    'GUILD_MESSAGES',
+    'GUILD_MESSAGE_REACTIONS',
+    'DIRECT_MESSAGES',
+);
 
 const client = new CommandoClient({
     commandPrefix: process.env.BOT_PREFIX,
@@ -70,6 +81,7 @@ client.registry
         ['general', 'General'],
         ['manage', 'Management'],
         ['roles', 'Role Management'],
+        ['emoji', 'Emoji'],
     ])
     .registerCommandsIn({
         dirname: path.join(__dirname, 'commands'),
@@ -92,6 +104,18 @@ client.once('ready', () => {
 // Register events
 client.on('channelDelete', (channel: Channel) => {
     const event = new ChannelDeleteEvent(client, channel);
+    return event.handle();
+});
+client.on('emojiCreate', (emoji: GuildEmoji) => {
+    const event = new EmojiCreateEvent(client, emoji);
+    return event.handle();
+});
+client.on('emojiDelete', (emoji: GuildEmoji) => {
+    const event = new EmojiDeleteEvent(client, emoji);
+    return event.handle();
+});
+client.on('emojiUpdate', (oldEmoji: GuildEmoji, newEmoji: GuildEmoji) => {
+    const event = new EmojiUpdateEvent(client, oldEmoji, newEmoji);
     return event.handle();
 });
 client.on('guildCreate', (guild: CommandoGuild) => {

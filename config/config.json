@@ -4,5 +4,15 @@
         "description": "Specify the maximum amount of reaction roles per a user. 0 = disabled",
         "defaultValue": "0",
         "guild": true
+    },
+    "emoji-list": {
+        "name": "Emoji list",
+        "description": "Discord Snowflake of the channel where the emoji list should be in. Keep in mind that the bot will treat the channel as a list only, thus, any other messages might be deleted.",
+        "guild": true
+    },
+    "emoji-changelog": {
+        "name": "Emoji changelog",
+        "description": "Discord Snowflake of the channel where all emoji changes should be stored in.",
+        "guild": true
     }
 }
