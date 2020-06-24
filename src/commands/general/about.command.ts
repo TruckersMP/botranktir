@@ -1,5 +1,5 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import * as packageFile from '../../../package.json';
 
 module.exports = class AboutCommand extends Command {
@@ -18,7 +18,7 @@ module.exports = class AboutCommand extends Command {
         });
     }
 
-    async run(message: CommandoMessage) {
+    async run(message: CommandoMessage): Promise<Message | Message[]> {
         let ownerText = '';
         for (const owner of this.client.owners) {
             ownerText += `${owner.username}#${owner.discriminator}\n`;
@@ -34,6 +34,6 @@ module.exports = class AboutCommand extends Command {
             .addField('Developed by', '[TruckersMP](https://truckersmp.com)', true)
             .addField('Bot\'s Owner', ownerText);
 
-        return await message.channel.send(embed);
+        return message.say(embed);
     }
 };
