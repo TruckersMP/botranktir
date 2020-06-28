@@ -1,5 +1,5 @@
 import Role from '../models/Role';
-import { Emoji } from '../structures/Emoji';
+import Emoji from '../structures/Emoji';
 
 type ManagedRole = {
     guildID: string;
@@ -225,6 +225,20 @@ export class RoleManager {
         this.managedRolesMap.get(guild).get(channel).delete(message);
 
         return true;
+    }
+
+    /**
+     * Get Snowflakes of all guilds with reaction roles from the local storage.
+     */
+    getManagedGuilds(): IterableIterator<string> {
+        return this.managedRolesMap.keys();
+    }
+
+    /**
+     * Get location information about all stored reaction roles in the local storage.
+     */
+    getManagedRoles(): IterableIterator<ManagedRole> {
+        return this.managedRoles.values();
     }
 
     /**

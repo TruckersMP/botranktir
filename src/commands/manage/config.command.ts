@@ -11,13 +11,20 @@ module.exports = class ConfigCommand extends Command {
             group: 'manage',
             memberName: 'config',
             description: `Configure the bot. Use ${client.commandPrefix}config for more information.`,
-            examples: ['servers'],
+            examples: [
+                'config',
+                'config options',
+                'config get',
+                'config get limit',
+                'config set limit 10',
+                'config remove limit',
+            ],
             userPermissions: ['ADMINISTRATOR'],
             clientPermissions: ['EMBED_LINKS'],
             guildOnly: true,
             throttling: {
-                usages: 1,
-                duration: 5,
+                usages: 5,
+                duration: 15,
             },
             args: [
                 {

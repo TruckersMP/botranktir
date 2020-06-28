@@ -1,4 +1,4 @@
-export class Emoji {
+export default class Emoji {
     /**
      * Snowflake of the emoji. If it is a standard emoji, the raw format is presented.
      */

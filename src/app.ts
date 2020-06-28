@@ -1,8 +1,12 @@
 import * as dotenv from 'dotenv';
-import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import * as path from 'path';
 import * as Knex from 'knex';
+import { Model } from 'objection';
 import { ChannelDeleteEvent } from './events/channel.delete.event';
+import { EmojiCreateEvent } from './events/emoji.create.event';
+import { EmojiDeleteEvent } from './events/emoji.delete.event';
+import { EmojiUpdateEvent } from './events/emoji.update.event';
+import { GuildCreateEvent } from './events/guild.create.event';
 import { GuildDeleteEvent } from './events/guild.delete.event';
 import { MessageDeleteEvent } from './events/message.delete.event';
 import { MessageDeleteBulkEvent } from './events/message.delete-bulk.event';
@@ -10,9 +14,9 @@ import { MessageReactionAddEvent } from './events/message.reaction-add.event';
 import { MessageReactionRemoveEvent } from './events/message.reaction-remove.event';
 import { RoleDeleteEvent } from './events/role.delete.event';
 import { ReadyEvent } from './events/ready.event';
-import { Model } from 'objection';
-import { Channel, Collection, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
-import { GuildCreateEvent } from './events/guild.create.event';
+import { Channel, Collection, GuildEmoji, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
+import { CommandoClient, CommandoGuild } from 'discord.js-commando';
+import { ClientManager } from './managers/client.manager';
 
 // Load config variables
 const config = dotenv.config({ path: '.env' });
@@ -44,7 +48,15 @@ Model.knex(knex);
 
 // Specify intents that are required by Discord
 const intents = new Intents();
-intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES');
+intents.add(
+    'GUILDS',
+    'GUILD_MEMBERS',
+    'GUILD_EMOJIS',
+    'GUILD_PRESENCES',
+    'GUILD_MESSAGES',
+    'GUILD_MESSAGE_REACTIONS',
+    'DIRECT_MESSAGES',
+);
 
 const client = new CommandoClient({
     commandPrefix: process.env.BOT_PREFIX,
@@ -69,6 +81,7 @@ client.registry
         ['general', 'General'],
         ['manage', 'Management'],
         ['roles', 'Role Management'],
+        ['emoji', 'Emoji'],
     ])
     .registerCommandsIn({
         dirname: path.join(__dirname, 'commands'),
@@ -77,6 +90,10 @@ client.registry
 
 // Login the bot with the forwarded token. If it fails, output the error via the forwarded function
 client.login(process.env.BOT_TOKEN).catch(console.error);
+
+// Initialize all global objects and load data to the local storage
+ClientManager.get().init(client);
+ClientManager.get().load().then(() => console.log('objects have been initialized'));
 
 // When the bot is successfully initialized
 client.once('ready', () => {
@@ -87,6 +104,18 @@ client.once('ready', () => {
 // Register events
 client.on('channelDelete', (channel: Channel) => {
     const event = new ChannelDeleteEvent(client, channel);
+    return event.handle();
+});
+client.on('emojiCreate', (emoji: GuildEmoji) => {
+    const event = new EmojiCreateEvent(client, emoji);
+    return event.handle();
+});
+client.on('emojiDelete', (emoji: GuildEmoji) => {
+    const event = new EmojiDeleteEvent(client, emoji);
+    return event.handle();
+});
+client.on('emojiUpdate', (oldEmoji: GuildEmoji, newEmoji: GuildEmoji) => {
+    const event = new EmojiUpdateEvent(client, oldEmoji, newEmoji);
     return event.handle();
 });
 client.on('guildCreate', (guild: CommandoGuild) => {

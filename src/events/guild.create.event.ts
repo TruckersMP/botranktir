@@ -5,6 +5,7 @@ import Role from '../models/Role';
 import { RoleManager } from '../managers/role.manager';
 import Configuration from '../models/Configuration';
 import { ConfigurationManager } from '../managers/configuration.manager';
+import { ClientManager } from '../managers/client.manager';
 
 /**
  * Handle `guildCreate` events from Discord.
@@ -23,8 +24,8 @@ export class GuildCreateEvent extends Event {
     async handle(): Promise<void> {
         console.log('joined guild', this.guild.id, this.guild.name);
 
-        // If data is cleared on leaving the guild, there is nothing left in the database;
-        // nothing needs to be fetched
+        // If data is cleared on leaving the guild, there is nothing left in
+        // the database; nothing needs to be fetched
         if (process.env.CLEAR_GUILD === 'true') {
             return;
         }
@@ -34,5 +35,8 @@ export class GuildCreateEvent extends Event {
 
         const configurations = await Configuration.getGuildConfigurations(this.guild.id);
         ConfigurationManager.get().fetchConfigurations(configurations);
+
+        // Once the data is loaded, run the cleanup
+        await ClientManager.get().clearGuildRoles(this.guild.id);
     }
 }

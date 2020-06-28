@@ -2,7 +2,7 @@ import { RoleManager } from '../managers/role.manager';
 import { MessageReactionEvent } from './message.reaction.event';
 import { GuildMember, Role } from 'discord.js';
 import { ConfigurationManager } from '../managers/configuration.manager';
-import { Emoji } from '../structures/Emoji';
+import Emoji from '../structures/Emoji';
 
 /**
  * Handle `messageReactionAdd` events from Discord.
@@ -23,7 +23,6 @@ export class MessageReactionAddEvent extends MessageReactionEvent {
         }
 
         const emoji = new Emoji(data.reaction.emoji.toString());
-
         const role = RoleManager.get().getRole(
             data.message.guild.id,
             data.message.channel.id,

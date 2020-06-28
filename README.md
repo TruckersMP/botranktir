@@ -4,8 +4,8 @@
 
 ## Introduction
 
-Botranktir is a Discord bot that takes care of reaction roles. It also provides a single use reaction roles,
-very advanced configuration of a guild and more.
+Botranktir is a Discord bot that takes care of reaction roles. It also provides a single-use reaction roles,
+very advanced configuration of a guild, an emoji list and changelog, and more.
 
 ## Requirements
 

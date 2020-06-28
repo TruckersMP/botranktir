@@ -89,6 +89,23 @@ export class ConfigurationManager {
     }
 
     /**
+     * Get all guilds with custom configurations from the local storage.
+     *
+     * @param ignoreGlobalConfig    Whether the key of the global bot configuration should be excluded
+     * @returns Keys of a map copy
+     */
+    getGuilds(ignoreGlobalConfig: boolean = false): IterableIterator<string> {
+        // Copy the map over in order not to have side effects
+        const guilds = new Map(this.guilds);
+
+        if (ignoreGlobalConfig) {
+            guilds.delete(this.resolveGuild());
+        }
+
+        return guilds.keys();
+    }
+
+    /**
      * Get the map of configurations from the local storage per the specific guild.
      *
      * @param guild
@@ -118,6 +135,27 @@ export class ConfigurationManager {
      */
     removeGuild(guild: string): void {
         this.guilds.delete(this.resolveGuild(guild));
+    }
+
+    /**
+     * Verify whether the specific configuration is modified or not.
+     *
+     * @param key
+     * @param guild
+     */
+    isConfigurationModified(key: string, guild?: string): boolean {
+        guild = this.resolveGuild(guild);
+        if (!ConfigurationManager.doesConfigurationExist(key, guild !== 'bot')) {
+            return false;
+        }
+
+        const value = ConfigurationManager.get().getConfiguration(key, guild);
+        const defaultConfigEntry = ConfigurationManager.getDefaultConfiguration(key);
+        if (!defaultConfigEntry) {
+            return false;
+        }
+
+        return value !== defaultConfigEntry.defaultValue;
     }
 
     /**

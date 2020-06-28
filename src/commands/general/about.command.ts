@@ -1,6 +1,8 @@
+import * as semver from 'semver';
+import * as Package from '../../../package.json';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { MessageEmbed } from 'discord.js';
-import * as packageFile from '../../../package.json';
+import { Message, MessageEmbed } from 'discord.js';
+import { Octokit } from '@octokit/rest';
 
 module.exports = class AboutCommand extends Command {
     constructor(client: CommandoClient) {
@@ -18,7 +20,7 @@ module.exports = class AboutCommand extends Command {
         });
     }
 
-    async run(message: CommandoMessage) {
+    async run(message: CommandoMessage): Promise<Message | Message[]> {
         let ownerText = '';
         for (const owner of this.client.owners) {
             ownerText += `${owner.username}#${owner.discriminator}\n`;
@@ -30,10 +32,37 @@ module.exports = class AboutCommand extends Command {
             .setURL('https://github.com/TruckersMP/botranktir')
             .setColor(global.BOT_COLOR)
             .setFooter('Open source bot for reaction roles')
-            .addField('Version', packageFile.version, true)
+            .addField('Version', this.getCurrentVersion(), true)
             .addField('Developed by', '[TruckersMP](https://truckersmp.com)', true)
             .addField('Bot\'s Owner', ownerText);
 
-        return await message.channel.send(embed);
+        const latestVersion = await this.getLatestVersion();
+        if (semver.gt(latestVersion, this.getCurrentVersion())) {
+            embed.addField('Newer Version Available', latestVersion);
+        }
+
+        return message.say(embed);
+    }
+
+    /**
+     * Get the current version of the bot from the package file.
+     */
+    protected getCurrentVersion(): string {
+        return Package.version.replace('v', '');
+    }
+
+    /**
+     * Get the latest version of the bot from Github.
+     */
+    protected async getLatestVersion(): Promise<string> {
+        const octokit = new Octokit();
+
+        return octokit.repos
+            .getLatestRelease({
+                owner: 'TruckersMP',
+                repo: 'botranktir',
+            })
+            .then((release) => release.data.name.replace('v', ''))
+            .catch(() => this.getCurrentVersion());
     }
 };

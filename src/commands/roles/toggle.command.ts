@@ -1,7 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, TextChannel } from 'discord.js';
 import { RoleManager } from '../../managers/role.manager';
-import { Emoji } from '../../structures/Emoji';
+import Emoji from '../../structures/Emoji';
 import Role from '../../models/Role';
 
 interface Arguments {
@@ -10,17 +10,16 @@ interface Arguments {
     emojiRaw: string;
 }
 
-module.exports = class DeleteRoleCommand extends Command {
+module.exports = class ToggleRoleCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
-            name: 'delrole',
+            name: 'togglerole',
             group: 'roles',
-            memberName: 'delrole',
-            description: 'Remove the reaction role from the message.',
-            examples: ['delrole #welcome 580458877531979786 :truckersmp:'],
-            aliases: ['deleterole', 'deletereaction', 'delreaction'],
+            memberName: 'togglerole',
+            description: 'Toggle the reaction role to be single use. If it is already single use, revert it.',
+            examples: ['togglerole #welcome 580458877531979786 :truckersmp:'],
+            aliases: ['togglereaction', 'togglesingleuse'],
             userPermissions: ['ADMINISTRATOR'],
-            clientPermissions: ['MANAGE_MESSAGES'],
             guildOnly: true,
             throttling: {
                 usages: 1,
@@ -29,19 +28,19 @@ module.exports = class DeleteRoleCommand extends Command {
             args: [
                 {
                     key: 'channel',
-                    prompt: 'Channel where the message for the reaction is placed in.',
+                    prompt: 'Channel where the message with the reaction role is placed in.',
                     type: 'channel',
                     default: '',
                 },
                 {
                     key: 'messageID',
-                    prompt: 'Message that the reaction should be removed from.',
+                    prompt: 'Message with the reaction role.',
                     type: 'string',
                     default: '',
                 },
                 {
                     key: 'emojiRaw',
-                    prompt: 'Emoticon that was used for the reaction role.',
+                    prompt: 'Emoticon that is used for the reaction role.',
                     type: 'string',
                     default: '',
                 },
@@ -64,34 +63,30 @@ module.exports = class DeleteRoleCommand extends Command {
                 'please, provide valid parameters! For more information, ' +
                 `run command \`${this.client.commandPrefix}help ${this.name}\``,
             );
-        }
 
+        }
         const emoji = new Emoji(args.emojiRaw);
 
-        const affectedRows = await Role.deleteReactionRole(
-            args.messageID,
-            emoji.id,
-        );
-
-        if (affectedRows === 0) {
+        const role = RoleManager.get().getRole(message.guild.id, args.channel.id, args.messageID, emoji.id);
+        if (!RoleManager.get().isManagedRole(role)) {
             return message.reply('no reaction matches the given credentials.');
         }
 
-        // Remove the reaction if it was removed from the database since
-        // we want to remove only reactions for roles, not others
-        try {
-            const channelMessage = await args.channel.messages.fetch(args.messageID);
-            const messageReaction = channelMessage.reactions.resolve(emoji.id);
-            if (messageReaction) {
-                await messageReaction.remove();
-            }
-        } catch (err) {
-            // The message is probably too old and thus, the reaction cannot be removed,
-            // or the message cannot be found. We do not need to do anything
+        const singleUse = RoleManager.get().isRoleSingleUse(args.messageID, role);
+        await Role.updateRoleSingleUse(args.messageID, emoji.id, role, !singleUse);
+        RoleManager.get().updateRoleSingleUse(
+            message.guild.id,
+            args.channel.id,
+            args.messageID,
+            role,
+            emoji.id,
+            !singleUse,
+        );
+
+        if (singleUse) {
+            return message.reply('the reaction role can now be unassigned after removing the reaction.');
         }
 
-        RoleManager.get().removeRole(message.guild.id, args.channel.id, args.messageID, emoji.id);
-
-        return message.reply('the reaction role has been successfully removed.');
+        return message.reply('the reaction role has been toggled to the single use.');
     }
 };
