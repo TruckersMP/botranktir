@@ -19,7 +19,7 @@ module.exports = class JoinCommand extends Command {
     }
 
     hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
-        const canBeInvited = ConfigurationManager.get().getConfiguration('invite', message.guild.id) === 'true';
+        const canBeInvited = ConfigurationManager.get().getConfiguration('invite') === 'true';
         if (!this.client.isOwner(message.author) && (global.LOCAL || !canBeInvited)) {
             return 'this bot cannot be invited!';
         }
