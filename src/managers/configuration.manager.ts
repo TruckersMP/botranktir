@@ -193,6 +193,20 @@ export class ConfigurationManager {
     }
 
     /**
+     * Get the default value of the configuration.
+     *
+     * @param key
+     */
+    static getDefaultValue(key: string): string | null {
+        const configuration = this.getDefaultConfiguration(key);
+        if (!configuration) {
+            return null;
+        }
+
+        return configuration.defaultValue;
+    }
+
+    /**
      * Determine whether the configuration is per-guild only.
      *
      * @param key
