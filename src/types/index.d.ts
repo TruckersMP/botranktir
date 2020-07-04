@@ -3,6 +3,8 @@ export declare global {
         interface Global {
             BOT_COLOR: number;
             SUCCESS_COLOR: number;
+
+            LOCAL: boolean;
         }
     }
 

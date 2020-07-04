@@ -29,6 +29,8 @@ if (config.error) {
 global['BOT_COLOR'] = 0xc4fcff;
 global['SUCCESS_COLOR'] = 0x6dcf84;
 
+global['LOCAL'] = process.env.LOCAL === 'true';
+
 // Set up the database connection
 const knex = Knex({
     client: 'mysql',
