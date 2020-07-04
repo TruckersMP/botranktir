@@ -74,7 +74,7 @@ module.exports = class AddRoleCommand extends Command {
         ) {
             return message.reply(
                 'please, provide valid parameters! For more information, ' +
-                `run command \`${this.client.commandPrefix}help ${this.name}\``,
+                `run command \`${message.guild.commandPrefix}help ${this.name}\``,
             );
         }
 
@@ -104,7 +104,7 @@ module.exports = class AddRoleCommand extends Command {
 
         const moreDetailsText =
             'For more details, run this command: ' +
-            `\`${this.client.commandPrefix}fetchmessage #${args.channel.name} ${args.messageID}\``;
+            `\`${message.guild.commandPrefix}fetchmessage #${args.channel.name} ${args.messageID}\``;
         // The same emoji cannot be twice on the same message
         if (RoleManager.get().getRole(guild.id, args.channel.id, args.messageID, emoji.id)) {
             return message.reply(`this emoji has already been connected to a role on the message.\n${moreDetailsText}`);

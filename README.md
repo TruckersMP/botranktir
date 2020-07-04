@@ -32,6 +32,16 @@ The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under 
 - **Production:** `npm run prod`
 - **Development:** `npm run dev`
 
+## Inviting the Bot
+
+As the bot has been built with keeping in mind it can be used in more than one Discord guild, other users
+can invite the bot to their server through the `[p]join` command. To make this possible, make sure you have
+enabled the **Public Bot** option in the Discord application settings. On top of that, the value of the
+`invite` configuration must equal to `true` (it is the default value as well).
+
+If you want to use this bot just for yourself, disable the above-mentioned option in the Discord application
+settings, and change the value of the `invite` configuration to `false`.
+
 ## Discord Intents
 
 Botranktir needs both **Presence** and **Server Members Intents** to work flawlessly, as it is described in

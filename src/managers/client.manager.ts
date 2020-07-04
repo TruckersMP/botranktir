@@ -1,6 +1,6 @@
 import Role from '../models/Role';
 import Configuration from '../models/Configuration';
-import { Client } from 'discord.js-commando';
+import { Client, CommandoGuild } from 'discord.js-commando';
 import { RoleManager } from './role.manager';
 import { ConfigurationManager } from './configuration.manager';
 import { TextChannel } from 'discord.js';
@@ -99,12 +99,31 @@ export class ClientManager {
             throw new Error('The instance is not initialized!');
         }
 
+        // Update the command prefix for all guilds
+        this.updateCommandPrefix();
+
         // Set interval for setting the activity as sometimes the activity is gone
         setInterval(ClientManager.setActivity, 60 * 1000, this.client);
         await ClientManager.setActivity(this.client);
 
         await this.clearConfigurations();
         await this.clearReactionRoles();
+    }
+
+    /**
+     * Load the command prefix for all guilds from the configuration.
+     *
+     * In the development mode, the command prefix is kept to default.
+     */
+    protected updateCommandPrefix(): void {
+        if (global.LOCAL) {
+            return;
+        }
+
+        for (const [guildId, guild] of this.client.guilds.cache) {
+            const commandoGuild = <CommandoGuild>guild;
+            commandoGuild.commandPrefix = ConfigurationManager.get().getConfiguration('prefix', guildId);
+        }
     }
 
     /**

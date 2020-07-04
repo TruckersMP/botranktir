@@ -17,6 +17,7 @@ import { ReadyEvent } from './events/ready.event';
 import { Channel, Collection, GuildEmoji, Intents, Message, MessageReaction, Role, Snowflake, User } from 'discord.js';
 import { CommandoClient, CommandoGuild } from 'discord.js-commando';
 import { ClientManager } from './managers/client.manager';
+import { ConfigurationManager } from './managers/configuration.manager';
 
 // Load config variables
 const config = dotenv.config({ path: '.env' });
@@ -28,6 +29,8 @@ if (config.error) {
 // Set global variables
 global['BOT_COLOR'] = 0xc4fcff;
 global['SUCCESS_COLOR'] = 0x6dcf84;
+
+global['LOCAL'] = process.env.LOCAL === 'true';
 
 // Set up the database connection
 const knex = Knex({
@@ -59,7 +62,7 @@ intents.add(
 );
 
 const client = new CommandoClient({
-    commandPrefix: process.env.BOT_PREFIX,
+    commandPrefix: global.LOCAL ? process.env.BOT_PREFIX : ConfigurationManager.getDefaultValue('prefix'),
     owner: process.env.BOT_OWNER.split(','),
     commandEditableDuration: 0,
     messageCacheMaxSize: parseInt(process.env.BOT_MESSAGE_CACHE),

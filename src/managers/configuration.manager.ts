@@ -193,6 +193,20 @@ export class ConfigurationManager {
     }
 
     /**
+     * Get the default value of the configuration.
+     *
+     * @param key
+     */
+    static getDefaultValue(key: string): string | null {
+        const configuration = this.getDefaultConfiguration(key);
+        if (!configuration) {
+            return null;
+        }
+
+        return configuration.defaultValue;
+    }
+
+    /**
      * Determine whether the configuration is per-guild only.
      *
      * @param key
@@ -204,6 +218,20 @@ export class ConfigurationManager {
 
         const config = this.getDefaultConfiguration(key);
         return config.guild;
+    }
+
+    /**
+     * Determine whether the configuration should be hidden from the output.
+     *
+     * @param key
+     */
+    static isHidden(key: string): boolean {
+        if (!this.doesConfigurationExist(key)) {
+            return false;
+        }
+
+        const config = this.getDefaultConfiguration(key);
+        return config.hidden;
     }
 
     /**

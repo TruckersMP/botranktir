@@ -3,6 +3,8 @@ export declare global {
         interface Global {
             BOT_COLOR: number;
             SUCCESS_COLOR: number;
+
+            LOCAL: boolean;
         }
     }
 
@@ -12,6 +14,7 @@ export declare global {
             description: string;
             defaultValue?: string;
             guild: boolean;
+            hidden?: boolean;
         }
     }
 }
