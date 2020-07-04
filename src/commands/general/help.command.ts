@@ -1,5 +1,5 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { Message } from 'discord.js';
+import { Message, Util } from 'discord.js';
 
 module.exports = class HelpCommand extends Command {
     constructor(client: CommandoClient) {
@@ -28,6 +28,8 @@ module.exports = class HelpCommand extends Command {
         const commands = this.client.registry.commands.clone().sort(this.sortCommands);
         // As message.message is not working, we need to cast the object instead to get that value
         const msg = <Message><unknown>message;
+        // Determine whether the member is an administrator. Works only in guilds
+        const isAdministrator = message.member && message.member.hasPermission(['ADMINISTRATOR'], { checkOwner: true });
 
         // Display help for all commands
         if (args.command === '') {
@@ -51,7 +53,7 @@ module.exports = class HelpCommand extends Command {
                     text.push(`[${command.group.name}]`);
                 }
 
-                text.push(`   ${prefix}${command.name} - ${command.description}`);
+                text.push(`   ${prefix}${command.name} - ${Util.cleanContent(command.description, msg)}`);
             });
 
             return message.say(text, { code: 'asciidoc', split: true });
@@ -62,8 +64,13 @@ module.exports = class HelpCommand extends Command {
             const text = [
                 `__**Group:**__ ${command.group.name} (\`${command.groupID}\`)`,
                 `__**Command:**__ ${command.name}`,
-                `${command.description}\n`,
+                `${command.description}`,
             ];
+
+            if (command.details) {
+                text.push(command.details);
+            }
+            text.push('');
 
             if (command.examples && command.examples.length > 0) {
                 text.push(`**Examples:** ${command.examples.join(', ')}`);
@@ -81,13 +88,14 @@ module.exports = class HelpCommand extends Command {
                 }
             }
 
+            const userPermissions = command.userPermissions;
+            if (userPermissions && userPermissions.length > 0 && isAdministrator) {
+                text.push(`**User permissions:** \`${userPermissions.join('`, `')}\``);
+            }
+
             const clientPermissions = command.clientPermissions;
-            if (clientPermissions && clientPermissions.length > 0 && message.member.hasPermission(['ADMINISTRATOR'])) {
-                const hasPermissions = this.client.guilds
-                    .resolve(message.guild)
-                    .member(this.client.user)
-                    .hasPermission(clientPermissions);
-                const permissionEmoji = hasPermissions ? '✅' : '❌';
+            if (clientPermissions && clientPermissions.length > 0 && isAdministrator) {
+                const permissionEmoji = message.guild.me.hasPermission(clientPermissions) ? '✅' : '❌';
                 text.push(`**Required permissions:** \`${clientPermissions.join('`, `')}\` (${permissionEmoji})`);
             }
 
