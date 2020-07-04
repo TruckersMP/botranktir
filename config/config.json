@@ -6,6 +6,12 @@
         "guild": true,
         "hidden": true
     },
+    "invite": {
+        "name": "Bot invites",
+        "description": "Whether the bot can be invited to other guilds by users. Possible values: `true`, `false`",
+        "defaultValue": "true",
+        "guild": false
+    },
     "limit": {
         "name": "Maximum reaction roles",
         "description": "Specify the maximum amount of reaction roles per a user. 0 = disabled",
