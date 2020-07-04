@@ -42,7 +42,7 @@ module.exports = class FetchMessageCommand extends Command {
         ) {
             return message.reply(
                 'please, provide valid parameters! For more information, ' +
-                `run command \`${this.client.commandPrefix}help ${this.name}\``,
+                `run command \`${message.guild.commandPrefix}help ${this.name}\``,
             );
         }
 

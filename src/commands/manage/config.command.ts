@@ -1,6 +1,6 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import * as Discord from 'discord.js';
 import * as DefaultConfig from '../../../config/config.json';
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { ConfigurationManager } from '../../managers/configuration.manager';
 import Configuration from '../../models/Configuration';
 
@@ -10,7 +10,7 @@ module.exports = class ConfigCommand extends Command {
             name: 'config',
             group: 'manage',
             memberName: 'config',
-            description: `Configure the bot. Use ${client.commandPrefix}config for more information.`,
+            description: 'Configure the bot. Use the `config` command for more information.',
             examples: [
                 'config',
                 'config options',
@@ -54,7 +54,7 @@ module.exports = class ConfigCommand extends Command {
         args: { action: string, key: string, value: string },
     ): Promise<Discord.Message | Discord.Message[]> {
         if (!args.action) {
-            return message.say(this.createHelp());
+            return message.say(this.createHelp(message.guild.commandPrefix));
         }
 
         if (args.action === 'options') {
@@ -73,7 +73,7 @@ module.exports = class ConfigCommand extends Command {
             return this.removeConfiguration(message, args.key);
         }
 
-        return message.replyEmbed(this.createHelp(), 'the action is invalid!');
+        return message.replyEmbed(this.createHelp(message.guild.commandPrefix), 'the action is invalid!');
     }
 
     /**
@@ -113,7 +113,7 @@ module.exports = class ConfigCommand extends Command {
     ): Promise<Discord.Message | Discord.Message[]> {
         // Check whether all parameters are provided (so they do not match the default value)
         if (key === '') {
-            return message.replyEmbed(this.createHelp(), 'no key has been provided!');
+            return message.replyEmbed(this.createHelp(message.guild.commandPrefix), 'no key has been provided!');
         }
         // Check the existence of the configuration
         if (!ConfigurationManager.doesConfigurationExist(key) || ConfigurationManager.isHidden(key)) {
@@ -178,10 +178,10 @@ module.exports = class ConfigCommand extends Command {
     ): Promise<Discord.Message | Discord.Message[]> {
         // Check whether all parameters are provided (so they do not match the default value)
         if (key === '') {
-            return message.replyEmbed(this.createHelp(), 'no key has been provided!');
+            return message.replyEmbed(this.createHelp(message.guild.commandPrefix), 'no key has been provided!');
         }
         if (value === '') {
-            return message.replyEmbed(this.createHelp(), 'no value has been provided!');
+            return message.replyEmbed(this.createHelp(message.guild.commandPrefix), 'no value has been provided!');
         }
         // Check the existence of the configuration
         if (!ConfigurationManager.doesConfigurationExist(key) || ConfigurationManager.isHidden(key)) {
@@ -216,7 +216,7 @@ module.exports = class ConfigCommand extends Command {
     ): Promise<Discord.Message | Discord.Message[]> {
         // Check whether all parameters are provided (so they do not match the default value)
         if (key === '') {
-            return message.replyEmbed(this.createHelp(), 'no key has been provided!');
+            return message.replyEmbed(this.createHelp(message.guild.commandPrefix), 'no key has been provided!');
         }
         // Check the existence of the configuration
         if (!ConfigurationManager.doesConfigurationExist(key) || ConfigurationManager.isHidden(key)) {
@@ -248,17 +248,17 @@ module.exports = class ConfigCommand extends Command {
     /**
      * Create an embed containing help for the command.
      */
-    protected createHelp(): Discord.MessageEmbed {
+    protected createHelp(prefix: string): Discord.MessageEmbed {
         return new Discord.MessageEmbed()
             .setTitle('Configuration')
             .setColor(global.BOT_COLOR)
             .setDescription(
                 'Modify changeable configuration variables for this bot.\n\n' +
-                `Type \`${this.client.commandPrefix}config options\` to view a list of valid configuration variables.\n\n` +
-                `To get all set configuration variables:\n\`${this.client.commandPrefix}config get\`\n\n` +
-                `To get a configuration variable:\n\`${this.client.commandPrefix}config get key\`\n\n` +
-                `To set a configuration variable:\n\`${this.client.commandPrefix}config set key value\`\n\n` +
-                `To remove a configuration variable:\n\`${this.client.commandPrefix}config remove key\``,
+                `Type \`${prefix}config options\` to view a list of valid configuration variables.\n\n` +
+                `To get all set configuration variables:\n\`${prefix}config get\`\n\n` +
+                `To get a configuration variable:\n\`${prefix}config get key\`\n\n` +
+                `To set a configuration variable:\n\`${prefix}config set key value\`\n\n` +
+                `To remove a configuration variable:\n\`${prefix}config remove key\``,
             );
     }
 };

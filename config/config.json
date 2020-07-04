@@ -1,4 +1,11 @@
 {
+    "prefix": {
+        "name": "Command prefix",
+        "description": "Prefix used for calling commands in a guild.",
+        "defaultValue": "+",
+        "guild": true,
+        "hidden": true
+    },
     "limit": {
         "name": "Maximum reaction roles",
         "description": "Specify the maximum amount of reaction roles per a user. 0 = disabled",

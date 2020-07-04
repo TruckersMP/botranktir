@@ -24,6 +24,12 @@ export class GuildCreateEvent extends Event {
     async handle(): Promise<void> {
         console.log('joined guild', this.guild.id, this.guild.name);
 
+        // Change the command prefix for the guild only if the bot is not in
+        // the development mode as in such a case, the environment value is forced
+        if (!global.LOCAL) {
+            this.guild.commandPrefix = ConfigurationManager.get().getConfiguration('prefix', this.guild.id);
+        }
+
         // If data is cleared on leaving the guild, there is nothing left in
         // the database; nothing needs to be fetched
         if (process.env.CLEAR_GUILD === 'true') {
