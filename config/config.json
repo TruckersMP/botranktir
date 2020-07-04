@@ -8,7 +8,7 @@
     },
     "invite": {
         "name": "Bot invites",
-        "description": "Whether the bot can be invited to other guilds by users. Possible values: `true`, `false`",
+        "description": "Whether the bot can be invited to other guilds. Possible values: `true`, `false`",
         "defaultValue": "true",
         "guild": false
     },
