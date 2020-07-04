@@ -207,6 +207,20 @@ export class ConfigurationManager {
     }
 
     /**
+     * Determine whether the configuration should be hidden from the output.
+     *
+     * @param key
+     */
+    static isHidden(key: string): boolean {
+        if (!this.doesConfigurationExist(key)) {
+            return false;
+        }
+
+        const config = this.getDefaultConfiguration(key);
+        return config.hidden;
+    }
+
+    /**
      * Resolve the guild for the local storage.
      *
      * @param guild

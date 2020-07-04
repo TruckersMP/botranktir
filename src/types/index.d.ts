@@ -12,6 +12,7 @@ export declare global {
             description: string;
             defaultValue?: string;
             guild: boolean;
+            hidden?: boolean;
         }
     }
 }
