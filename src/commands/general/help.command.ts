@@ -24,7 +24,7 @@ module.exports = class HelpCommand extends Command {
         message: CommandoMessage,
         args: { command: string },
     ): Promise<Message | Message[]> {
-        const prefix = message.guild.commandPrefix;
+        const prefix = message.guild ? message.guild.commandPrefix : this.client.commandPrefix;
         const commands = this.client.registry.commands.clone().sort(this.sortCommands);
         // As message.message is not working, we need to cast the object instead to get that value
         const msg = <Message><unknown>message;
