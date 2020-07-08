@@ -15,6 +15,12 @@ export class EmojiManager {
             entries.push(`${emoji} \`:${emoji.name}:\``);
         }
 
+        // As the guild might not have any emojis, we need to make sure that
+        // something is getting sent as an empty message is not allowed
+        if (entries.length === 0) {
+            entries.push('This guild has no emojis.');
+        }
+
         return entries;
     }
 
