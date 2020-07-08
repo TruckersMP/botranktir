@@ -17,7 +17,7 @@ module.exports = class PrefixCommand extends Command {
                 'The prefix can be only 2 characters long.',
             format: '[prefix/"default"]',
             examples: ['prefix', 'prefix +', 'prefix default'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             guildOnly: true,
             throttling: {
                 usages: 5,

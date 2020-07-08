@@ -33,7 +33,6 @@ module.exports = class HelpCommand extends Command {
 
         // Display help for all commands
         if (args.command === '') {
-            let activeCategory: string;
             const text: string[] = [];
 
             text.push('= Command List = \n');
@@ -43,6 +42,7 @@ module.exports = class HelpCommand extends Command {
             }
             text.push('');
 
+            let activeCategory: string;
             commands.forEach((command: Command) => {
                 if (!command.isUsable(msg) || (command.hidden && !this.client.isOwner(message.author))) {
                     return;
