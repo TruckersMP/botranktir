@@ -28,7 +28,18 @@ module.exports = class JoinCommand extends Command {
     }
 
     async run(message: CommandoMessage): Promise<Message | Message[]> {
-        const invite = await this.client.generateInvite('ADMINISTRATOR');
+        const invite = await this.client.generateInvite([
+            'CREATE_INSTANT_INVITE',
+            'ADD_REACTIONS',
+            'VIEW_CHANNEL',
+            'SEND_MESSAGES',
+            'MANAGE_MESSAGES',
+            'EMBED_LINKS',
+            'READ_MESSAGE_HISTORY',
+            'USE_EXTERNAL_EMOJIS',
+            'CHANGE_NICKNAME',
+            'MANAGE_ROLES',
+        ]);
         return message.say(`Invite ${this.client.user.username} to your guild: ${invite}`);
     }
 };
