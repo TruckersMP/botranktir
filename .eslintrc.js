@@ -19,6 +19,7 @@ module.exports = {
         'dot-location': ['error', 'property'],
         'handle-callback-err': 'off',
         'indent': ['error', 4],
+        'max-len': ['error', { 'code': 120 }],
         'max-nested-callbacks': ['error', { 'max': 4 }],
         'max-statements-per-line': ['error', { 'max': 1 }],
         'no-console': 'off',
