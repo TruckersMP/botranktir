@@ -2,7 +2,7 @@ import * as semver from 'semver';
 import * as Package from '../../../package.json';
 import { BotDeveloper, ClientManager } from '../../managers/client.manager';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, User } from 'discord.js';
 import { Octokit } from '@octokit/rest';
 
 module.exports = class AboutCommand extends Command {
@@ -22,10 +22,7 @@ module.exports = class AboutCommand extends Command {
     }
 
     async run(message: CommandoMessage): Promise<Message | Message[]> {
-        let ownerText = '';
-        for (const owner of this.client.owners) {
-            ownerText += `${owner.username}#${owner.discriminator}\n`;
-        }
+        const owners = this.client.owners.map((owner: User) => `${owner.username}#${owner.discriminator}`).join('\n');
 
         const developedBy = ClientManager.get()
             .getDevelopers()
@@ -40,7 +37,7 @@ module.exports = class AboutCommand extends Command {
             .setFooter('Open source bot for reaction roles')
             .addField('Version', this.getCurrentVersion(), true)
             .addField('Developed by', developedBy, true)
-            .addField('Bot\'s Owner', ownerText);
+            .addField('Bot\'s Owner', owners);
 
         const latestVersion = await this.getLatestVersion();
         if (semver.gt(latestVersion, this.getCurrentVersion())) {

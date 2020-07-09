@@ -241,7 +241,10 @@ export class ClientManager {
      * @param client
      */
     protected static async setActivity(client: Client): Promise<void> {
-        if (client.user.presence.activities.length === 0) {
+        // The user needs to be fetched again. Discord might remove the presence
+        // of the client, and when it happens, the cache does not get updated
+        const user = await client.user.fetch();
+        if (user.presence.activities.length === 0) {
             await client.user.setActivity('TruckersMP', {
                 url: 'https://truckersmp.com',
                 type: 'PLAYING',
