@@ -25,7 +25,6 @@ module.exports = class HelpCommand extends Command {
         args: { command: string },
     ): Promise<Message | Message[]> {
         const prefix = message.guild ? message.guild.commandPrefix : this.client.commandPrefix;
-        const commands = this.client.registry.commands.clone().sort(this.sortCommands);
         // As message.message is not working, we need to cast the object instead to get that value
         const msg = <Message><unknown>message;
         // Determine whether the member is an administrator. Works only in guilds
@@ -43,7 +42,7 @@ module.exports = class HelpCommand extends Command {
             text.push('');
 
             let activeCategory: string;
-            commands.forEach((command: Command) => {
+            this.client.registry.commands.clone().sort(this.sortCommands).forEach((command: Command) => {
                 if (!command.isUsable(msg) || (command.hidden && !this.client.isOwner(message.author))) {
                     return;
                 }
@@ -59,7 +58,8 @@ module.exports = class HelpCommand extends Command {
             return message.say(text, { code: 'asciidoc', split: true });
         }
 
-        const command = commands.get(args.command);
+        const commands = this.client.registry.findCommands(args.command, true);
+        const command = commands.length > 0 ? commands[0] : null;
         if (command && command.isUsable(msg) && (!command.hidden || this.client.isOwner(message.author))) {
             const text = [
                 `__**Group:**__ ${command.group.name} (\`${command.groupID}\`)`,
