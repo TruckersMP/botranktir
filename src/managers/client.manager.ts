@@ -5,6 +5,11 @@ import { RoleManager } from './role.manager';
 import { ConfigurationManager } from './configuration.manager';
 import { TextChannel } from 'discord.js';
 
+export interface BotDeveloper {
+    name: string;
+    link: string;
+}
+
 /**
  * Manages the Discord client instance.
  *
@@ -89,6 +94,21 @@ export class ClientManager {
      */
     getStartedAt(): Date | undefined {
         return this.startedAt;
+    }
+
+    /**
+     * Get the developers of the bot.
+     *
+     * If you feel like you contributed a fair part to the bot, do not hesitate
+     * to add yourself with a link to your portfolio (or a Github profile).
+     *
+     * Any advertisement or promotional links will not be accepted!
+     */
+    getDevelopers(): BotDeveloper[] {
+        return [
+            { name: 'TruckersMP', link: 'https://truckersmp.com' },
+            { name: '3v', link: 'https://3v.fi/' },
+        ];
     }
 
     /**
@@ -221,7 +241,10 @@ export class ClientManager {
      * @param client
      */
     protected static async setActivity(client: Client): Promise<void> {
-        if (client.user.presence.activities.length === 0) {
+        // The user needs to be fetched again. Discord might remove the presence
+        // of the client, and when it happens, the cache does not get updated
+        const user = await client.user.fetch();
+        if (user.presence.activities.length === 0) {
             await client.user.setActivity('TruckersMP', {
                 url: 'https://truckersmp.com',
                 type: 'PLAYING',

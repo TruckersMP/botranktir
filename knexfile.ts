@@ -1,5 +1,6 @@
+import * as dotenv from 'dotenv';
+
 // Load config variables
-const dotenv = require('dotenv');
 const config = dotenv.config({ path: '.env' });
 if (config.error) {
     console.error('configuration could not be parsed', config.error);
@@ -22,6 +23,7 @@ module.exports = {
         connection,
         migrations: {
             tableName: 'knex_migrations',
+            directory: './database/migrations',
         },
     },
 
@@ -30,6 +32,7 @@ module.exports = {
         connection,
         migrations: {
             tableName: 'knex_migrations',
+            directory: './database/migrations',
         },
     },
 };

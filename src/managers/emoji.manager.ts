@@ -10,9 +10,15 @@ export class EmojiManager {
     static generateList(guild: Guild): string[] {
         const entries: string[] = [];
 
-        const emojis = guild.emojis.cache.sort(this.sortEmojis);
+        const emojis = guild.emojis.cache.filter(this.filterEmojis).sort(this.sortEmojis);
         for (const [, emoji] of emojis) {
             entries.push(`${emoji} \`:${emoji.name}:\``);
+        }
+
+        // As the guild might not have any emojis, we need to make sure that
+        // something is getting sent as an empty message is not allowed
+        if (entries.length === 0) {
+            entries.push('This guild has no emojis.');
         }
 
         return entries;
@@ -50,6 +56,15 @@ export class EmojiManager {
         }
 
         return <TextChannel>channel;
+    }
+
+    /**
+     * Filter emojis so the bot can display them.
+     *
+     * @param emoji
+     */
+    protected static filterEmojis(emoji: GuildEmoji): boolean {
+        return !emoji.managed;
     }
 
     /**

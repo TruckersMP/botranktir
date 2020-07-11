@@ -11,7 +11,9 @@ module.exports = class EmojiListCommand extends Command {
             memberName: 'emojilist',
             description: 'Generate a list of emojis to the configured channel.',
             examples: ['emojilist'],
-            userPermissions: ['ADMINISTRATOR'],
+            aliases: ['emoji-list'],
+            clientPermissions: ['MANAGE_MESSAGES'],
+            userPermissions: ['MANAGE_GUILD'],
             guildOnly: true,
             throttling: {
                 usages: 1,
