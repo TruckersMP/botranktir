@@ -2,7 +2,7 @@
     "prefix": {
         "name": "Command prefix",
         "description": "Prefix used for calling commands in a guild.",
-        "defaultValue": "+",
+        "defaultValue": "-",
         "guild": true,
         "hidden": true
     },
