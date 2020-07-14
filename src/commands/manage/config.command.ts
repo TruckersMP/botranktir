@@ -1,6 +1,7 @@
 import * as Discord from 'discord.js';
 import * as DefaultConfig from '../../../config/config.json';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { PermissionsManager } from '../../managers/permission.manager';
 import { ConfigurationManager } from '../../managers/configuration.manager';
 import Configuration from '../../models/Configuration';
 
@@ -47,6 +48,14 @@ module.exports = class ConfigCommand extends Command {
                 },
             ],
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(

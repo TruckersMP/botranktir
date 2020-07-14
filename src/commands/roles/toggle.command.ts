@@ -1,5 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, TextChannel } from 'discord.js';
+import { PermissionsManager } from '../../managers/permission.manager';
 import { RoleManager } from '../../managers/role.manager';
 import Emoji from '../../structures/Emoji';
 import Role from '../../models/Role';
@@ -46,6 +47,14 @@ module.exports = class ToggleRoleCommand extends Command {
                 },
             ],
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(

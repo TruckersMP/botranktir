@@ -1,7 +1,8 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import * as Discord from 'discord.js';
-import Role from '../../models/Role';
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { PermissionsManager } from '../../managers/permission.manager';
 import { RoleManager } from '../../managers/role.manager';
+import Role from '../../models/Role';
 import Emoji from '../../structures/Emoji';
 
 interface Arguments {
@@ -58,6 +59,14 @@ module.exports = class AddRoleCommand extends Command {
                 },
             ],
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(

@@ -1,5 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, Util } from 'discord.js';
+import { PermissionsManager } from '../../managers/permission.manager';
 
 module.exports = class HelpCommand extends Command {
     constructor(client: CommandoClient) {
@@ -28,7 +29,7 @@ module.exports = class HelpCommand extends Command {
         // As message.message is not working, we need to cast the object instead to get that value
         const msg = <Message><unknown>message;
         // Determine whether the member is an administrator. Works only in guilds
-        const isAdministrator = message.member && message.member.hasPermission(['ADMINISTRATOR'], { checkOwner: true });
+        const isAdministrator = message.member && PermissionsManager.isGuildManager(message.member);
 
         // Display help for all commands
         if (args.command === '') {

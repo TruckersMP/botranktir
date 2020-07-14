@@ -1,6 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { RoleManager } from '../../managers/role.manager';
+import { PermissionsManager } from '../../managers/permission.manager';
 
 module.exports = class FetchMessageCommand extends Command {
     constructor(client: CommandoClient) {
@@ -28,6 +29,14 @@ module.exports = class FetchMessageCommand extends Command {
                 },
             ],
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(
