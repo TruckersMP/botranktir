@@ -3,7 +3,7 @@ import Configuration from '../models/Configuration';
 import { Client, CommandoGuild } from 'discord.js-commando';
 import { RoleManager } from './role.manager';
 import { ConfigurationManager } from './configuration.manager';
-import { TextChannel } from 'discord.js';
+import { Activity, Presence, TextChannel } from 'discord.js';
 
 export interface BotDeveloper {
     name: string;
@@ -123,7 +123,7 @@ export class ClientManager {
         this.updateCommandPrefix();
 
         // Set interval for setting the activity as sometimes the activity is gone
-        setInterval(ClientManager.setActivity, 60 * 1000, this.client);
+        setInterval((client: Client) => ClientManager.setActivity(client), 60 * 1000, this.client);
         await ClientManager.setActivity(this.client);
 
         await this.clearConfigurations();
@@ -244,11 +244,22 @@ export class ClientManager {
         // The user needs to be fetched again. Discord might remove the presence
         // of the client, and when it happens, the cache does not get updated
         const user = await client.user.fetch();
-        if (user.presence.activities.length === 0) {
-            await client.user.setActivity('TruckersMP', {
+
+        if (!this.isPlaying(user.presence)) {
+            await client.user.setActivity({
+                name: 'TruckersMP',
                 url: 'https://truckersmp.com',
                 type: 'PLAYING',
             });
         }
+    }
+
+    /**
+     * Determine whether the member with the given presence is playing a game.
+     *
+     * @param presence
+     */
+    protected static isPlaying(presence: Presence): boolean {
+        return presence.activities.find((activity: Activity) => activity.type === 'PLAYING') !== undefined;
     }
 }

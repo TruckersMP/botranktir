@@ -1,7 +1,9 @@
 import * as Discord from 'discord.js';
 import * as DefaultConfig from '../../../config/config.json';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { PermissionsManager } from '../../managers/permission.manager';
 import { ConfigurationManager } from '../../managers/configuration.manager';
+import { Util } from '../../util/Util';
 import Configuration from '../../models/Configuration';
 
 module.exports = class ConfigCommand extends Command {
@@ -49,6 +51,14 @@ module.exports = class ConfigCommand extends Command {
         });
     }
 
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
+    }
+
     async run(
         message: CommandoMessage,
         args: { action: string, key: string, value: string },
@@ -82,9 +92,8 @@ module.exports = class ConfigCommand extends Command {
      * @param message
      */
     protected async displayOptions(message: CommandoMessage): Promise<Discord.Message | Discord.Message[]> {
-        const embed = new Discord.MessageEmbed()
-            .setColor(global.BOT_COLOR)
-            .setTitle('Configuration Options');
+        // Prepare fields in order to be able to split them (due to limits)
+        const fields: Discord.EmbedFieldData[] = [];
 
         for (const key in DefaultConfig) {
             const config = ConfigurationManager.getDefaultConfiguration(key);
@@ -92,13 +101,18 @@ module.exports = class ConfigCommand extends Command {
                 continue;
             }
 
-            embed.addField(
-                `${config.name} (${key})` + (!config.guild ? ' (**BOT**)' : ''),
-                config.description + (config.defaultValue ? `\nDefault value: \`${config.defaultValue}\`` : ''),
-            );
+            fields.push({
+                name: `${config.name} (${key})` + (!config.guild ? ' (**BOT**)' : ''),
+                value: config.description + (config.defaultValue ? `\nDefault value: \`${config.defaultValue}\`` : ''),
+            });
         }
 
-        return message.say(embed);
+        const embeds = Util.createEmbeds({ color: global.BOT_COLOR, title: 'Configuration Options' }, fields);
+        for (const embed of embeds) {
+            await message.embed(embed);
+        }
+
+        return null;
     }
 
     /**
@@ -139,29 +153,41 @@ module.exports = class ConfigCommand extends Command {
      * @param message
      */
     protected async getConfigurations(message: CommandoMessage): Promise<Discord.Message | Discord.Message[]> {
-        const embed = new Discord.MessageEmbed()
-            .setTitle('Configuration Values')
-            .setColor(global.BOT_COLOR);
+        // Prepare fields in order to be able to split them (due to limits)
+        const fields: Discord.EmbedFieldData[] = [];
 
         // First, loop through global bot configurations
         ConfigurationManager.get().getGuild().forEach((value: string, key: string) => {
             if (!ConfigurationManager.isHidden(key)) {
-                embed.addField(`${key} (**BOT**)`, `\`${value}\``);
+                fields.push({ name: `${key} (**BOT**)`, value: `\`${value}\`` });
             }
         });
         // Then, go through the guild configurations
         ConfigurationManager.get().getGuild(message.guild.id).forEach((value: string, key: string) => {
             if (!ConfigurationManager.isHidden(key)) {
-                embed.addField(key, `\`${value}\``);
+                fields.push({ name: key, value: `\`${value}\`` });
             }
         });
 
-        // As unmodified configuration values are not stored, let the user know that nothing has been changed
-        if (embed.fields.length === 0) {
-            embed.setDescription('No configuration values have been modified.');
+        const title = 'Configuration Values';
+
+        // As unmodified configuration values are not stored, let the user know
+        // that nothing has been changed
+        if (fields.length === 0) {
+            const embed = new Discord.MessageEmbed()
+                .setTitle(title)
+                .setColor(global.BOT_COLOR)
+                .setDescription('No configuration values have been modified.');
+
+            return message.say(embed);
         }
 
-        return message.say(embed);
+        const embeds = Util.createEmbeds({ color: global.BOT_COLOR, title }, fields);
+        for (const embed of embeds) {
+            await message.embed(embed);
+        }
+
+        return null;
     }
 
     /**

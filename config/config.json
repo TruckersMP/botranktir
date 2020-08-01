@@ -27,5 +27,10 @@
         "name": "Emoji changelog",
         "description": "Discord Snowflake of the channel where all emoji changes should be stored in.",
         "guild": true
+    },
+    "guild-manager": {
+        "name": "Guild Manager",
+        "description": "Discord Snowflake of the Guild Manager role. Members with this role can use commands which require the Administrator permission.",
+        "guild": true
     }
 }

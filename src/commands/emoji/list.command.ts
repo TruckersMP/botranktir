@@ -2,6 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message } from 'discord.js';
 import { ConfigurationManager } from '../../managers/configuration.manager';
 import { EmojiManager } from '../../managers/emoji.manager';
+import { PermissionsManager } from '../../managers/permission.manager';
 
 module.exports = class EmojiListCommand extends Command {
     constructor(client: CommandoClient) {
@@ -16,10 +17,18 @@ module.exports = class EmojiListCommand extends Command {
             userPermissions: ['MANAGE_GUILD'],
             guildOnly: true,
             throttling: {
-                usages: 1,
+                usages: 2,
                 duration: 10,
             },
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(message: CommandoMessage): Promise<Message | Message[]> {

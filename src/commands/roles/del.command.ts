@@ -1,5 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { Message, TextChannel } from 'discord.js';
+import { PermissionsManager } from '../../managers/permission.manager';
 import { RoleManager } from '../../managers/role.manager';
 import Emoji from '../../structures/Emoji';
 import Role from '../../models/Role';
@@ -23,8 +24,8 @@ module.exports = class DeleteRoleCommand extends Command {
             clientPermissions: ['MANAGE_MESSAGES'],
             guildOnly: true,
             throttling: {
-                usages: 1,
-                duration: 5,
+                usages: 3,
+                duration: 10,
             },
             args: [
                 {
@@ -47,6 +48,14 @@ module.exports = class DeleteRoleCommand extends Command {
                 },
             ],
         });
+    }
+
+    hasPermission(message: CommandoMessage, ownerOverride?: boolean): boolean | string {
+        if (PermissionsManager.isGuildManager(message.member)) {
+            return true;
+        }
+
+        return super.hasPermission(message, ownerOverride);
     }
 
     async run(
