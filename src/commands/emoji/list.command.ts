@@ -17,7 +17,7 @@ module.exports = class EmojiListCommand extends Command {
             userPermissions: ['MANAGE_GUILD'],
             guildOnly: true,
             throttling: {
-                usages: 1,
+                usages: 2,
                 duration: 10,
             },
         });

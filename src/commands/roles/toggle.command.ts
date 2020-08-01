@@ -23,8 +23,8 @@ module.exports = class ToggleRoleCommand extends Command {
             userPermissions: ['ADMINISTRATOR'],
             guildOnly: true,
             throttling: {
-                usages: 1,
-                duration: 5,
+                usages: 3,
+                duration: 10,
             },
             args: [
                 {

@@ -25,7 +25,7 @@ module.exports = class DeleteRoleCommand extends Command {
             clientPermissions: ['MANAGE_MESSAGES'],
             guildOnly: true,
             throttling: {
-                usages: 1,
+                usages: 2,
                 duration: 10,
             },
             args: [

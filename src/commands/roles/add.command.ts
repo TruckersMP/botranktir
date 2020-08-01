@@ -27,8 +27,8 @@ module.exports = class AddRoleCommand extends Command {
             clientPermissions: ['MANAGE_ROLES', 'ADD_REACTIONS'],
             guildOnly: true,
             throttling: {
-                usages: 1,
-                duration: 5,
+                usages: 3,
+                duration: 10,
             },
             args: [
                 {
