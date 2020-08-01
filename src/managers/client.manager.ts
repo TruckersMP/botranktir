@@ -123,7 +123,7 @@ export class ClientManager {
         this.updateCommandPrefix();
 
         // Set interval for setting the activity as sometimes the activity is gone
-        setInterval(ClientManager.setActivity, 60 * 1000, this.client);
+        setInterval((client: Client) => ClientManager.setActivity(client), 60 * 1000, this.client);
         await ClientManager.setActivity(this.client);
 
         await this.clearConfigurations();
