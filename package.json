@@ -1,6 +1,6 @@
 {
     "name": "botranktir",
-    "version": "2.4.3",
+    "version": "2.5.0",
     "description": "Discord bot that manages roles after reacting to a message",
     "main": "build/src/app.js",
     "scripts": {
