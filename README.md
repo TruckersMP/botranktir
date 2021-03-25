@@ -34,7 +34,7 @@ The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under 
 
 ## Inviting the Bot
 
-As the bot has been built keeping in mind it can be used in more than one Discord guild, other users
+As the bot has been built keeping in mind that it can be used in more than one Discord guild, other users
 can invite the bot to their server through the `[p]join` command. To make this possible, make sure you have
 enabled the **Public Bot** option in the Discord application settings. On top of that, the value of the
 `invite` configuration must equal `true` (it is the default value as well).
