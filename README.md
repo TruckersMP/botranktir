@@ -4,7 +4,8 @@
 
 ## Introduction
 
-Botranktir is a Discord bot that takes care of reaction roles. It also provides single-use reaction roles, a very advanced configuration of a guild, an emoji list and changelog, and more.
+Botranktir is a Discord bot that takes care of reaction roles. It also provides a single-use reaction role,
+very advanced configuration of a guild, an emoji list and changelog, and more.
 
 ## Requirements
 
@@ -33,13 +34,19 @@ The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under 
 
 ## Inviting the Bot
 
-As the bot has been built keeping in mind it can be used in more than one Discord guild, other users can invite the bot to their server through the `[p]join` command. To make this possible, make sure you have enabled the **Public Bot** option in the Discord application settings. On top of that, the value of the `invite` configuration must equal `true` (it is the default value as well).
+As the bot has been built keeping in mind it can be used in more than one Discord guild, other users
+can invite the bot to their server through the `[p]join` command. To make this possible, make sure you have
+enabled the **Public Bot** option in the Discord application settings. On top of that, the value of the
+`invite` configuration must equal `true` (it is the default value as well).
 
-If you want to use this bot just for yourself, disable the above-mentioned option in the Discord application settings, and change the value of the `invite` configuration to `false`.
+If you want to use this bot just for yourself, disable the above-mentioned option in the Discord application
+settings, and change the value of the `invite` configuration to `false`.
 
 ## Discord Intents
 
-Botranktir needs both **Presence** and **Server Members Intents** to work flawlessly, as it is described in the installation process. Starting on 7th October 2020, using this bot without the Discord verification will not be possible if the bot is in more than 100 guilds.
+Botranktir needs both **Presence** and **Server Members Intents** to work flawlessly, as it is described in
+the installation process. Starting on 7th October 2020, using this bot without the Discord verification will
+not be possible if the bot is in more than 100 guilds.
 
 Learn more about this topic here: https://support.discord.com/hc/en-us/articles/360040720412
 
