@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Botranktir is a Discord bot that takes care of reaction roles. It also provides a single-use reaction roles,
+Botranktir is a Discord bot that takes care of reaction roles. It also provides a single-use reaction role,
 very advanced configuration of a guild, an emoji list and changelog, and more.
 
 ## Requirements
@@ -34,10 +34,10 @@ The bot is using [PM2](http://pm2.keymetrics.io/) and thus, it can be run under 
 
 ## Inviting the Bot
 
-As the bot has been built with keeping in mind it can be used in more than one Discord guild, other users
+As the bot has been built keeping in mind that it can be used in more than one Discord guild, other users
 can invite the bot to their server through the `[p]join` command. To make this possible, make sure you have
 enabled the **Public Bot** option in the Discord application settings. On top of that, the value of the
-`invite` configuration must equal to `true` (it is the default value as well).
+`invite` configuration must equal `true` (it is the default value as well).
 
 If you want to use this bot just for yourself, disable the above-mentioned option in the Discord application
 settings, and change the value of the `invite` configuration to `false`.
