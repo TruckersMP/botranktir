@@ -2,6 +2,12 @@
 
 # Botranktir
 
+## Deprecation Note
+
+This bot is extremely outdated and does not follow trends of Discord. Moreover, the problem that this bot was
+supposed to combat, which was a lack of bots taking care of reaction roles, is no more present. If you want to
+have reaction roles in your Discord server, please take a look at other bots.
+
 ## Introduction
 
 Botranktir is a Discord bot that takes care of reaction roles. It also provides a single-use reaction role,
